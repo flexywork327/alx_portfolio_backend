@@ -9,7 +9,7 @@ const sendEmail = require("../Utils/Email");
 // desc Register User
 // @route post /api/user/register
 // @access public
-const registerAdmin = async (req, res) => {
+const registerSeller = async (req, res) => {
   const {
     first_name,
     last_name,
@@ -23,7 +23,7 @@ const registerAdmin = async (req, res) => {
 
   try {
     // check if user already exists
-    const user = await pool.query("SELECT * FROM admin WHERE email = $1", [
+    const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
       email,
     ]);
 
@@ -32,15 +32,22 @@ const registerAdmin = async (req, res) => {
       const activationLink = `http://localhost:5000/api/v1/activate_user?email=${user.rows[0].email}&token=${user.rows[0].token}`;
 
       const linkHtml = `
-      <a href="${activationLink}" style="background-color: #4CAF50;
-      border: none;
-      color: white;
+      <a href="${activationLink}" style="background-color: #0d6efd;
+      color: #ffffff;
       padding: 15px 32px;
-      margin: 15px 32px;
       text-align: center;
-      text-decoration: none;">Activate Account</a>`;
+      text-decoration: none;
+      border-radius: 6px;
+      ">Activate Account</a>`;
 
-      const html = `<p>Hi ${user.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+      const html = `<p  style="
+      width: 50%;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      padding: 50px;
+      margin: 0 auto;
+      border-radius: 10px;
+    ">Hi ${user.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
       const tittle = "Welcome to Attendance App for Roscareer";
       const message =
         "Email already used, check your email for the activation link";
@@ -69,7 +76,7 @@ const registerAdmin = async (req, res) => {
 
       // insert user into database
       const newUser = await pool.query(
-        "INSERT INTO admin (first_name, last_name, email, password,company_name,country,contact,business_category,token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+        "INSERT INTO sellers (first_name, last_name, email, password,company_name,country,contact,business_category,token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
         [
           first_name,
           last_name,
@@ -87,15 +94,22 @@ const registerAdmin = async (req, res) => {
         const activationLink = `http://localhost:5000/api/v1/activate_user?email=${newUser.rows[0].email}&token=${newUser.rows[0].token}`;
 
         const linkHtml = `
-        <a href="${activationLink}" style="background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        margin: 15px 32px;
-        text-align: center;
-        text-decoration: none;">Activate Account</a>`;
+        <a href="${activationLink}" style="background-color: #0d6efd;
+        color: #ffffff;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          border-radius: 6px;
+        ">Activate Account</a>`;
 
-        const html = `<p>Hi ${newUser.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+        const html = `<p  style="
+        width: 50%;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 50px;
+        margin: 0 auto;
+        border-radius: 10px;
+      ">Hi ${newUser.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
         const tittle = "Welcome to Attendance App for Roscareer";
         const message =
           "Thank you for registering with us. Please click on the button below to activate your account. Link expires in 1hr.";
@@ -130,10 +144,10 @@ const registerAdmin = async (req, res) => {
 //POST /activate/${email}&${token}
 //@desc  Verify shopper email
 //@ private
-const activateUser = async (req, res) => {
+const activateSeller = async (req, res) => {
   const { email, token } = req.body;
   // find user
-  const user = await pool.query("SELECT * FROM admin WHERE email = $1", [
+  const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
     email,
   ]);
 
@@ -141,7 +155,7 @@ const activateUser = async (req, res) => {
     if (user.rows[0] && user.rows[0].token === token) {
       //  update current user activated column as true and token as null
       const updatedUser = await pool.query(
-        "UPDATE admin SET activated = true WHERE email = $1 RETURNING *",
+        "UPDATE users SET activated = true WHERE email = $1 RETURNING *",
         [email]
       );
 
@@ -168,12 +182,12 @@ const activateUser = async (req, res) => {
 // desc Login User
 // @route post /api/v1/login
 // @access public
-const loginUser = async (req, res) => {
+const loginSeller = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     // check if user exists
-    const user = await pool.query("SELECT * FROM admin WHERE email = $1", [
+    const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
       email,
     ]);
 
@@ -211,7 +225,7 @@ const loginUser = async (req, res) => {
 // desc Update User
 // @route post /api/v1/update
 // @access public
-const updateUser = async (req, res) => {
+const updateSeller = async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -225,7 +239,7 @@ const updateUser = async (req, res) => {
     } = req.body;
 
     //  get the user from the database
-    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM sellers WHERE id = $1", [id]);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -236,7 +250,7 @@ const updateUser = async (req, res) => {
 
     // update user
     const updatedUser = await pool.query(
-      "UPDATE admin SET first_name = $1, last_name = $2, email = $3, company_name = $4, country = $5, contact = $6, business_category = $7  WHERE id = $8 RETURNING *",
+      "UPDATE sellers SET first_name = $1, last_name = $2, email = $3, company_name = $4, country = $5, contact = $6, business_category = $7  WHERE id = $8 RETURNING *",
       [
         first_name,
         last_name,
@@ -261,30 +275,6 @@ const updateUser = async (req, res) => {
   }
 };
 
-//TODO: ======================================================== Get All Users ========================================================
-
-// desc Get All Users
-// @route get /api/user/all
-// @access private
-const getAllUsers = async (req, res) => {
-  try {
-    const allUsers = await pool.query(
-      "SELECT id,first_name,last_name, email, company_name,country,contact,business_category,created_at,activated FROM sellers"
-    );
-
-    res.json({
-      status: 200,
-      message: "Successfully fetched all users",
-      allUsers: allUsers.rows,
-    });
-  } catch (error) {
-    res.json({
-      status: 400,
-      message: `${error}`,
-    });
-  }
-};
-
 //TODO: ======================================================== Get  User ========================================================
 // desc Get User
 // @route get /api/user/:id
@@ -293,7 +283,7 @@ const getUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -315,41 +305,6 @@ const getUser = async (req, res) => {
   }
 };
 
-// TODO: ========================================= Delete user =========================================
-// desc Delete User
-// @route delete /api/user/delete/:id
-// @access private
-
-const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
-
-    if (user.rows.length === 0) {
-      return res.json({
-        status: 400,
-        message: "User not found",
-      });
-    }
-
-    const deletedUser = await pool.query("DELETE FROM admin WHERE id = $1", [
-      id,
-    ]);
-
-    res.json({
-      status: 200,
-      message: "User deleted successfully",
-      deletedUser: user.rows[0],
-    });
-  } catch (error) {
-    res.json({
-      status: 400,
-      message: `${error}`,
-    });
-  }
-};
-
 // TODO: ========================================= Change user Password =========================================
 // desc Change User Password
 // @route post /api/user/change-password/:id
@@ -362,7 +317,7 @@ const changePassword = async (req, res) => {
 
     //  get the user from the database
     const user = await pool.query(
-      "SELECT id,first_name,last_name, email, role,created_at  FROM admin WHERE id = $1",
+      "SELECT id,first_name,last_name, email, role,created_at  FROM users WHERE id = $1",
       [id]
     );
 
@@ -381,7 +336,7 @@ const changePassword = async (req, res) => {
 
       // update user
       const updatedUser = await pool.query(
-        "UPDATE admin SET password = $1 WHERE id = $2 RETURNING *",
+        "UPDATE users SET password = $1 WHERE id = $2 RETURNING *",
         [hashedPassword, id]
       );
 
@@ -413,12 +368,10 @@ const generateToken = (id) => {
 };
 
 module.exports = {
-  registerAdmin,
-  loginUser,
-  getAllUsers,
   getUser,
-  updateUser,
-  deleteUser,
+  loginSeller,
+  updateSeller,
+  registerSeller,
   changePassword,
-  activateUser,
+  activateSeller,
 };
