@@ -5,7 +5,7 @@
     \c portfolio;
 
 -- create table for Admin
-    CREATE TABLE users (
+    CREATE TABLE admin (
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
@@ -78,37 +78,6 @@
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
--- CREATE TABLES FOR THE ORDERS
-    CREATE TABLE orders (
-        id SERIAL PRIMARY KEY,
-        product_id INTEGER REFERENCES products(id),
-        shopper_id INTEGER REFERENCES shoppers(id),
-        quantity VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
--- CREATE TABLES FOR THE CARTS
-    CREATE TABLE carts (
-        id SERIAL PRIMARY KEY,
-        product_id INTEGER REFERENCES products(id),
-        shopper_id INTEGER REFERENCES shoppers(id),
-        quantity VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
--- CREATE TABLES FOR THE REVIEWS
-    CREATE TABLE reviews (
-        id SERIAL PRIMARY KEY,
-        product_id INTEGER REFERENCES products(id),
-        shopper_id INTEGER REFERENCES shoppers(id),
-        review VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    
-       
 
 -- drop TABLES
     DROP TABLE IF EXISTS users;
@@ -116,8 +85,6 @@
 -- INSERT DATA
     INSERT INTO users (first_name,last_name, email, password,role) VALUES ('John','Doe' 'flexywork327@gmail.com', '123456','admin');
 
--- SELECT DATA
-    SELECT * FROM users;
 
 -- Delete DATA
     DELETE FROM users WHERE id = 1;
