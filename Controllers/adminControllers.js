@@ -9,7 +9,7 @@ const sendEmail = require("../Utils/Email");
 // desc Register User
 // @route post /api/user/register
 // @access public
-const registerSeller = async (req, res) => {
+const registerAdmin = async (req, res) => {
   const {
     first_name,
     last_name,
@@ -23,7 +23,7 @@ const registerSeller = async (req, res) => {
 
   try {
     // check if user already exists
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+    const user = await pool.query("SELECT * FROM admin WHERE email = $1", [
       email,
     ]);
 
@@ -69,7 +69,7 @@ const registerSeller = async (req, res) => {
 
       // insert user into database
       const newUser = await pool.query(
-        "INSERT INTO users (first_name, last_name, email, password,company_name,country,contact,business_category,token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+        "INSERT INTO admin (first_name, last_name, email, password,company_name,country,contact,business_category,token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
         [
           first_name,
           last_name,
@@ -133,7 +133,7 @@ const registerSeller = async (req, res) => {
 const activateUser = async (req, res) => {
   const { email, token } = req.body;
   // find user
-  const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+  const user = await pool.query("SELECT * FROM admin WHERE email = $1", [
     email,
   ]);
 
@@ -141,7 +141,7 @@ const activateUser = async (req, res) => {
     if (user.rows[0] && user.rows[0].token === token) {
       //  update current user activated column as true and token as null
       const updatedUser = await pool.query(
-        "UPDATE users SET activated = true WHERE email = $1 RETURNING *",
+        "UPDATE admin SET activated = true WHERE email = $1 RETURNING *",
         [email]
       );
 
@@ -173,7 +173,7 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // check if user exists
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+    const user = await pool.query("SELECT * FROM admin WHERE email = $1", [
       email,
     ]);
 
@@ -225,7 +225,7 @@ const updateUser = async (req, res) => {
     } = req.body;
 
     //  get the user from the database
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -236,7 +236,7 @@ const updateUser = async (req, res) => {
 
     // update user
     const updatedUser = await pool.query(
-      "UPDATE users SET first_name = $1, last_name = $2, email = $3, company_name = $4, country = $5, contact = $6, business_category = $7  WHERE id = $8 RETURNING *",
+      "UPDATE admin SET first_name = $1, last_name = $2, email = $3, company_name = $4, country = $5, contact = $6, business_category = $7  WHERE id = $8 RETURNING *",
       [
         first_name,
         last_name,
@@ -269,7 +269,7 @@ const updateUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const allUsers = await pool.query(
-      "SELECT id,first_name,last_name, email, company_name,country,contact,business_category,created_at,activated FROM users"
+      "SELECT id,first_name,last_name, email, company_name,country,contact,business_category,created_at,activated FROM admin"
     );
 
     res.json({
@@ -293,7 +293,7 @@ const getUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -324,7 +324,7 @@ const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -333,7 +333,7 @@ const deleteUser = async (req, res) => {
       });
     }
 
-    const deletedUser = await pool.query("DELETE FROM users WHERE id = $1", [
+    const deletedUser = await pool.query("DELETE FROM admin WHERE id = $1", [
       id,
     ]);
 
@@ -362,7 +362,7 @@ const changePassword = async (req, res) => {
 
     //  get the user from the database
     const user = await pool.query(
-      "SELECT id,first_name,last_name, email, role,created_at  FROM users WHERE id = $1",
+      "SELECT id,first_name,last_name, email, role,created_at  FROM admin WHERE id = $1",
       [id]
     );
 
@@ -381,7 +381,7 @@ const changePassword = async (req, res) => {
 
       // update user
       const updatedUser = await pool.query(
-        "UPDATE users SET password = $1 WHERE id = $2 RETURNING *",
+        "UPDATE admin SET password = $1 WHERE id = $2 RETURNING *",
         [hashedPassword, id]
       );
 
@@ -413,7 +413,7 @@ const generateToken = (id) => {
 };
 
 module.exports = {
-  registerSeller,
+  registerAdmin,
   loginUser,
   getAllUsers,
   getUser,

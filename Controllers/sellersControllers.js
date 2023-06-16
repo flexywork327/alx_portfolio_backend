@@ -23,7 +23,7 @@ const registerSeller = async (req, res) => {
 
   try {
     // check if user already exists
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+    const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
       email,
     ]);
 
@@ -69,7 +69,7 @@ const registerSeller = async (req, res) => {
 
       // insert user into database
       const newUser = await pool.query(
-        "INSERT INTO users (first_name, last_name, email, password,company_name,country,contact,business_category,token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+        "INSERT INTO sellers (first_name, last_name, email, password,company_name,country,contact,business_category,token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
         [
           first_name,
           last_name,
@@ -130,10 +130,10 @@ const registerSeller = async (req, res) => {
 //POST /activate/${email}&${token}
 //@desc  Verify shopper email
 //@ private
-const activateUser = async (req, res) => {
+const activateSeller = async (req, res) => {
   const { email, token } = req.body;
   // find user
-  const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+  const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
     email,
   ]);
 
@@ -168,12 +168,12 @@ const activateUser = async (req, res) => {
 // desc Login User
 // @route post /api/v1/login
 // @access public
-const loginUser = async (req, res) => {
+const loginSeller = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     // check if user exists
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+    const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
       email,
     ]);
 
@@ -211,7 +211,7 @@ const loginUser = async (req, res) => {
 // desc Update User
 // @route post /api/v1/update
 // @access public
-const updateUser = async (req, res) => {
+const updateSeller = async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -225,7 +225,7 @@ const updateUser = async (req, res) => {
     } = req.body;
 
     //  get the user from the database
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM sellers WHERE id = $1", [id]);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -236,7 +236,7 @@ const updateUser = async (req, res) => {
 
     // update user
     const updatedUser = await pool.query(
-      "UPDATE users SET first_name = $1, last_name = $2, email = $3, company_name = $4, country = $5, contact = $6, business_category = $7  WHERE id = $8 RETURNING *",
+      "UPDATE sellers SET first_name = $1, last_name = $2, email = $3, company_name = $4, country = $5, contact = $6, business_category = $7  WHERE id = $8 RETURNING *",
       [
         first_name,
         last_name,
@@ -256,30 +256,6 @@ const updateUser = async (req, res) => {
     });
   } catch (error) {
     res.json({
-      message: `${error}`,
-    });
-  }
-};
-
-//TODO: ======================================================== Get All Users ========================================================
-
-// desc Get All Users
-// @route get /api/user/all
-// @access private
-const getAllUsers = async (req, res) => {
-  try {
-    const allUsers = await pool.query(
-      "SELECT id,first_name,last_name, email, company_name,country,contact,business_category,created_at,activated FROM users"
-    );
-
-    res.json({
-      status: 200,
-      message: "Successfully fetched all users",
-      allUsers: allUsers.rows,
-    });
-  } catch (error) {
-    res.json({
-      status: 400,
       message: `${error}`,
     });
   }
@@ -307,41 +283,6 @@ const getUser = async (req, res) => {
         user: user.rows[0],
       });
     }
-  } catch (error) {
-    res.json({
-      status: 400,
-      message: `${error}`,
-    });
-  }
-};
-
-// TODO: ========================================= Delete user =========================================
-// desc Delete User
-// @route delete /api/user/delete/:id
-// @access private
-
-const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
-
-    if (user.rows.length === 0) {
-      return res.json({
-        status: 400,
-        message: "User not found",
-      });
-    }
-
-    const deletedUser = await pool.query("DELETE FROM users WHERE id = $1", [
-      id,
-    ]);
-
-    res.json({
-      status: 200,
-      message: "User deleted successfully",
-      deletedUser: user.rows[0],
-    });
   } catch (error) {
     res.json({
       status: 400,
@@ -413,12 +354,10 @@ const generateToken = (id) => {
 };
 
 module.exports = {
-  registerSeller,
-  loginUser,
-  getAllUsers,
   getUser,
-  updateUser,
-  deleteUser,
+  loginSeller,
+  updateSeller,
+  registerSeller,
   changePassword,
-  activateUser,
+  activateSeller,
 };
