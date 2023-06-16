@@ -23,15 +23,22 @@ const registerShopper = async (req, res) => {
       const activationLink = `http://localhost:5000/api/v1/activate_user?email=${user.rows[0].email}&token=${user.rows[0].token}`;
 
       const linkHtml = `
-      <a href="${activationLink}" style="background-color: #4CAF50;
-      border: none;
-      color: white;
+      <a href="${activationLink}" style="background-color: #0d6efd;
+      color: #ffffff;
       padding: 15px 32px;
-      margin: 15px 32px;
       text-align: center;
-      text-decoration: none;">Activate Account</a>`;
+      text-decoration: none;
+      border-radius: 6px;
+      ">Activate Account</a>`;
 
-      const html = `<p>Please click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+      const html = `<p  style="
+      width: 50%;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      padding: 50px;
+      margin: 0 auto;
+      border-radius: 10px;
+    ">Please click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
       const tittle = "Welcome to ---";
       const message =
         "Email already used, check your email for the activation link";
@@ -68,15 +75,22 @@ const registerShopper = async (req, res) => {
         const activationLink = `http://localhost:5000/api/v1/activate_user?email=${newUser.rows[0].email}&token=${newUser.rows[0].token}`;
 
         const linkHtml = `
-        <a href="${activationLink}" style="background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        margin: 15px 32px;
-        text-align: center;
-        text-decoration: none;">Activate Account</a>`;
+        <a href="${activationLink}" style="background-color: #0d6efd;
+        color: #ffffff;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          border-radius: 6px;
+        ">Activate Account</a>`;
 
-        const html = `<p>Please click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+        const html = `<p  style="
+        width: 50%;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 50px;
+        margin: 0 auto;
+        border-radius: 10px;
+      ">Please click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
         const tittle = "Welcome to --";
         const message =
           "Thank you for registering with us. Please click on the button below to activate your account. Link expires in 1hr.";
