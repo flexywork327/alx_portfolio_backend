@@ -27,7 +27,7 @@ def main():
 
 #  Get the Current branch name
     current_branch_name = os.popen("git branch").read()
-    current_branch_name = current_branch_name.split("*")[1]
+    # current_branch_name = current_branch_name.split("*")[1]
 
 
 #   Get commit message

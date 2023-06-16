@@ -13,6 +13,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/v1", require("./Routes/adminRoutes"));
 
+app.use("/api/v1", require("./Routes/productsRoutes"));
+
 // TODO: starting server
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
