@@ -3,6 +3,10 @@
 
 -- connect to database
     \c portfolio;
+    \d -- show all tables in database
+    \d users -- show all tables in users database
+    \? -- show all commands
+
 
 -- create table for Admin
     CREATE TABLE admin (
