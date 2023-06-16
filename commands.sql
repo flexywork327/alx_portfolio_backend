@@ -35,6 +35,9 @@
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+    INSERT INTO SELLERS (first_name,last_name, email, password,company_name,country,contact,business_category) 
+    VALUES ('John','Doe','flexywork327@gmail.com', '123456','flexywork','Nigeria','09012345678','fashion');
+
 -- CREATE TABLES FOR THE SHOPPERS
     CREATE TABLE shoppers (
         id SERIAL PRIMARY KEY,
@@ -42,7 +45,7 @@
         password VARCHAR(255) NOT NULL,
         token VARCHAR(255),
         activated BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
 -- CREATE TABLES FOR THE PRODUCTS

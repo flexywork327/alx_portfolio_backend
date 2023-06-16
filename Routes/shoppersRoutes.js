@@ -6,7 +6,7 @@ const {
   getShopper,
   changePassword,
   activateShopper,
-} = require("../Controllers/shoppersController");
+} = require("../Controllers/shoppersControllers");
 const { protect } = require("../Middlewares/adminAuthMiddleware");
 
 router.get("/me/:id", protect, getShopper);

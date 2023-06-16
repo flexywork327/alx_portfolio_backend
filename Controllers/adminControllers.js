@@ -269,7 +269,7 @@ const updateUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const allUsers = await pool.query(
-      "SELECT id,first_name,last_name, email, company_name,country,contact,business_category,created_at,activated FROM admin"
+      "SELECT id,first_name,last_name, email, company_name,country,contact,business_category,created_at,activated FROM sellers"
     );
 
     res.json({

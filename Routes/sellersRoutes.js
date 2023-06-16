@@ -7,7 +7,7 @@ const {
   activateSeller,
   changePassword,
   registerSeller,
-} = require("../Controllers/sellersController");
+} = require("../Controllers/sellersControllers");
 const { protect } = require("../Middlewares/adminAuthMiddleware");
 
 router.get("/me/:id", protect, getUser);
