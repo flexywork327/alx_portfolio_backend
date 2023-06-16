@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const {
-  registerShopper,
-  loginShopper,
   getShopper,
+  loginShopper,
   changePassword,
+  registerShopper,
   activateShopper,
 } = require("../Controllers/shoppersControllers");
 const { protect } = require("../Middlewares/adminAuthMiddleware");

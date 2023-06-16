@@ -20,7 +20,7 @@ const registerShopper = async (req, res) => {
 
     // if user exists, resend activation link
     if (user.rows.length > 0) {
-      const activationLink = `http://localhost:5000/api/v1/activate_user?email=${user.rows[0].email}&token=${user.rows[0].token}`;
+      const activationLink = `http://localhost:5000/api/v1/shoppers/activate_user?email=${user.rows[0].email}&token=${user.rows[0].token}`;
 
       const linkHtml = `
       <a href="${activationLink}" style="background-color: #0d6efd;
@@ -72,7 +72,7 @@ const registerShopper = async (req, res) => {
       );
 
       if (newUser.rows[0]) {
-        const activationLink = `http://localhost:5000/api/v1/activate_user?email=${newUser.rows[0].email}&token=${newUser.rows[0].token}`;
+        const activationLink = `http://localhost:5000/api/v1/shoppers/activate_user?email=${newUser.rows[0].email}&token=${newUser.rows[0].token}`;
 
         const linkHtml = `
         <a href="${activationLink}" style="background-color: #0d6efd;
