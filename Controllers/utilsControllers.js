@@ -80,10 +80,10 @@ const postIndustries = async (req, res) => {
 const postProduct_category = async (req, res) => {
   //  post product_categories to the database
   try {
-    const { product_name } = req.body;
+    const { product_category_name } = req.body;
     const newProduct_category = await pool.query(
-      "INSERT INTO product_categories (product_name) VALUES($1) RETURNING *",
-      [product_name]
+      "INSERT INTO product_categories (product_category_name) VALUES($1) RETURNING *",
+      [product_category_name]
     );
     res.json({
       status: 200,

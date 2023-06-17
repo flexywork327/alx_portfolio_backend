@@ -396,55 +396,143 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// TODO: ========================================= Change user Password =========================================
-// desc Change User Password
-// @route post /api/user/change-password/:id
+// TODO: ========================================= Activate Product =========================================
+// desc Activate Product
+// @route post /api/admin/activate_product/:id
 // @access private
-const changePassword = async (req, res) => {
+const activateProduct = async (req, res) => {
+  //  activate product
   try {
-    const { id } = req.params;
+    const { id } = req.body;
 
-    const { oldPassword, newPassword } = req.body;
+    const product = await pool.query("SELECT * FROM products WHERE id = $1", [
+      id,
+    ]);
 
-    //  get the user from the database
-    const user = await pool.query(
-      "SELECT id,first_name,last_name, email, role,created_at  FROM admin WHERE id = $1",
+    if (product.rows.length === 0) {
+      return res.json({
+        status: 400,
+        message: "Product not found",
+      });
+    }
+
+    const activatedProduct = await pool.query(
+      "UPDATE products SET product_activated = true WHERE id = $1 RETURNING *",
       [id]
     );
 
-    if (user.rows.length === 0) {
-      return res.json({
-        status: 400,
-        message: "User not found",
-      });
-    }
-
-    // check if old password is correct
-    if (user && (await bcrypt.compare(oldPassword, user.rows[0].password))) {
-      // hash new password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-      // update user
-      const updatedUser = await pool.query(
-        "UPDATE admin SET password = $1 WHERE id = $2 RETURNING *",
-        [hashedPassword, id]
-      );
-
-      res.json({
-        status: 200,
-        message: "Password updated successfully",
-        updatedUser: updatedUser.rows[0],
-      });
-    } else {
-      res.json({
-        status: 400,
-        message: "Invalid old password",
-      });
-      return;
-    }
+    res.json({
+      status: 200,
+      message: "Product activated successfully",
+      activatedProduct: activatedProduct.rows[0],
+    });
   } catch (error) {
     res.json({
+      status: 400,
+      message: `${error}`,
+    });
+  }
+};
+
+// TODO: ========================================= Deactivate Product =========================================
+// desc Activate Product
+// @route post /api/admin/activate_product/:id
+// @access private
+const deactivateProduct = async (req, res) => {
+  //  deactivate product
+  try {
+    const { id } = req.body;
+
+    const product = await pool.query("SELECT * FROM products WHERE id = $1", [
+      id,
+    ]);
+
+    if (product.rows.length === 0) {
+      return res.json({
+        status: 400,
+        message: "Product not found",
+      });
+    }
+
+    const activatedProduct = await pool.query(
+      "UPDATE products SET product_activated = false WHERE id = $1 RETURNING *",
+      [id]
+    );
+
+    res.json({
+      status: 200,
+      message: "Product deactivated successfully",
+      activatedProduct: activatedProduct.rows[0],
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      message: `${error}`,
+    });
+  }
+};
+
+// TODO: ========================================= Delete Product =========================================
+// desc Activate Product
+// @route post /api/admin/activate_product/:id
+// @access private
+const deleteProduct = async (req, res) => {
+  //  delete product
+  try {
+    const { id } = req.body;
+
+    const product = await pool.query("SELECT * FROM products WHERE id = $1", [
+      id,
+    ]);
+
+    if (product.rows.length === 0) {
+      return res.json({
+        status: 400,
+        message: "Product not found",
+      });
+    }
+
+    const deletedProduct = await pool.query(
+      "DELETE FROM products WHERE id = $1 RETURNING *",
+      [id]
+    );
+
+    res.json({
+      status: 200,
+      message: "Product deleted successfully",
+      deletedProduct: deletedProduct.rows[0],
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      message: `${error}`,
+    });
+  }
+};
+
+// TODO: =========================================  DashBoard Stats =========================================
+// desc Dashboard stats
+// @route post /api/admin/dashboard_info
+// @access private
+const dashBoardInfo = async (req, res) => {
+  //  get dashboard stats
+  try {
+    // const totalAdmins = await pool.query("SELECT COUNT(*) FROM admin");
+    const totalSellers = await pool.query("SELECT COUNT(*) FROM sellers");
+    const totalShoppers = await pool.query("SELECT COUNT(*) FROM shoppers");
+    const totalProducts = await pool.query("SELECT COUNT(*) FROM products");
+
+    res.json({
+      status: 200,
+      message: "Dashboard stats",
+      // totalAdmins: totalAdmins.rows[0].count,
+      totalSellers: totalSellers.rows[0].count,
+      totalShoppers: totalShoppers.rows[0].count,
+      totalProducts: totalProducts.rows[0].count,
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
       message: `${error}`,
     });
   }
@@ -464,9 +552,12 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  changePassword,
+  activateProduct,
   activateUser,
   getAllShoppers,
   getAllSellers,
   getAllProducts,
+  deactivateProduct,
+  deleteProduct,
+  dashBoardInfo,
 };

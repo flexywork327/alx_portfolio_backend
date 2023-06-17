@@ -13,7 +13,7 @@
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(255) NOT NULL,
         token VARCHAR(255),
@@ -27,11 +27,11 @@
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        company_name VARCHAR(255) NOT NULL,
+        company_name VARCHAR(255) NOT NULL UNIQUE,
         country VARCHAR(255) NOT NULL,
-        contact VARCHAR(255) NOT NULL,
+        contact VARCHAR(255) NOT NULL UNIQUE,
         business_category VARCHAR(255) NOT NULL,
         token VARCHAR(255),
         activated BOOLEAN DEFAULT false,
@@ -45,7 +45,7 @@
 -- CREATE TABLES FOR THE SHOPPERS
     CREATE TABLE shoppers (
         id SERIAL PRIMARY KEY,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         token VARCHAR(255),
         activated BOOLEAN DEFAULT false,
@@ -62,9 +62,9 @@
         product_quantity VARCHAR(255) NOT NULL,
         product_image VARCHAR(255) NOT NULL,
         product_location VARCHAR(255) NOT NULL,
-        product_contact VARCHAR(255) NOT NULL,
         product_position VARCHAR(255) NOT NULL,
-        -- seller_id INTEGER REFERENCES sellers(id),
+        seller_id INTEGER REFERENCES sellers(id),
+        product_activated BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -72,13 +72,13 @@
 -- CREATE TABLES FOR THE industries
     CREATE TABLE industries (
         id SERIAL PRIMARY KEY,
-        industry_name VARCHAR(255) NOT NULL
+        industry_name VARCHAR(255) NOT NULL UNIQUE
     );
 
 -- CREATE TABLES FOR THE categories
     CREATE TABLE product_categories (
         id SERIAL PRIMARY KEY,
-        product_name VARCHAR(255) NOT NULL
+        product_category_name VARCHAR(255) NOT NULL UNIQUE
     );
 
 
