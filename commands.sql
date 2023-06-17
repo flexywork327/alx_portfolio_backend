@@ -55,13 +55,16 @@
 -- CREATE TABLES FOR THE PRODUCTS
     CREATE TABLE products (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        price VARCHAR(255) NOT NULL,
-        quantity VARCHAR(255) NOT NULL,
-        image VARCHAR(255) NOT NULL,
-        category VARCHAR(255) NOT NULL,
-        seller_id INTEGER REFERENCES sellers(id),
+        product_name VARCHAR(255) NOT NULL,
+        product_category VARCHAR(255) NOT NULL,
+        product_description VARCHAR(255) NOT NULL,
+        product_price VARCHAR(255) NOT NULL,
+        product_quantity VARCHAR(255) NOT NULL,
+        product_image VARCHAR(255) NOT NULL,
+        product_location VARCHAR(255) NOT NULL,
+        product_contact VARCHAR(255) NOT NULL,
+        product_position VARCHAR(255) NOT NULL,
+        -- seller_id INTEGER REFERENCES sellers(id),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

@@ -261,21 +261,67 @@ const updateUser = async (req, res) => {
   }
 };
 
-//TODO: ======================================================== Get All Users ========================================================
+//TODO: ======================================================== Get All Sellers ========================================================
 
 // desc Get All Users
 // @route get /api/user/all
 // @access private
-const getAllUsers = async (req, res) => {
+const getAllSellers = async (req, res) => {
   try {
-    const allUsers = await pool.query(
+    const allSellers = await pool.query(
       "SELECT id,first_name,last_name, email, company_name,country,contact,business_category,created_at,activated FROM sellers"
     );
 
     res.json({
       status: 200,
       message: "Successfully fetched all users",
-      allUsers: allUsers.rows,
+      allSellers: allSellers.rows,
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      message: `${error}`,
+    });
+  }
+};
+
+//TODO: ======================================================== Get All Shoppers ========================================================
+
+// desc Get All Users
+// @route get /api/user/all
+// @access private
+const getAllShoppers = async (req, res) => {
+  try {
+    const allShoppers = await pool.query(
+      "SELECT id, email, created_at,activated FROM shoppers"
+    );
+
+    res.json({
+      status: 200,
+      message: "Successfully fetched all shoppers",
+      allShoppers: allShoppers.rows,
+    });
+  } catch (error) {
+    res.json({
+      status: 400,
+      message: `${error}`,
+    });
+  }
+};
+
+//TODO: ======================================================== Get All Products ========================================================
+
+// desc Get All Users
+// @route get /api/user/all
+// @access private
+const getAllProducts = async (req, res) => {
+  try {
+    const allProducts = await pool.query("SELECT * FROM products");
+
+    res.json({
+      status: 200,
+      message: "Successfully fetched all products",
+      allProducts: allProducts.rows,
     });
   } catch (error) {
     res.json({
@@ -415,10 +461,12 @@ const generateToken = (id) => {
 module.exports = {
   registerAdmin,
   loginUser,
-  getAllUsers,
   getUser,
   updateUser,
   deleteUser,
   changePassword,
   activateUser,
+  getAllShoppers,
+  getAllSellers,
+  getAllProducts,
 };

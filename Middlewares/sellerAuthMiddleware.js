@@ -17,9 +17,12 @@ const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, JWT_SECRET);
 
       // Get User From token id
-      verifiedUser = await pool.query("SELECT * FROM users WHERE id = $1", [
+      verifiedUser = await pool.query("SELECT * FROM sellers WHERE id = $1", [
         decoded.id,
       ]);
+
+      // Add user from payload
+      req.user = verifiedUser.rows[0];
 
       next();
     } catch (error) {

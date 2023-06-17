@@ -8,7 +8,7 @@ const {
   changePassword,
   registerSeller,
 } = require("../Controllers/sellersControllers");
-const { protect } = require("../Middlewares/adminAuthMiddleware");
+const { protect } = require("../Middlewares/sellerAuthMiddleware");
 
 router.get("/me/:id", protect, getUser);
 

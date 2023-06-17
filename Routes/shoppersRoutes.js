@@ -7,7 +7,7 @@ const {
   registerShopper,
   activateShopper,
 } = require("../Controllers/shoppersControllers");
-const { protect } = require("../Middlewares/adminAuthMiddleware");
+const { protect } = require("../Middlewares/sellerAuthMiddleware");
 
 router.get("/me/:id", protect, getShopper);
 

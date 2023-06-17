@@ -1,5 +1,26 @@
 const pool = require("../Config/db");
 
+//TODO: ======================================================== Get All Product ========================================================
+
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const get_all_Products = async (req, res) => {
+  try {
+    //  get the product from the database
+    const product = await pool.query("SELECT * FROM products");
+
+    res.json({
+      status: 200,
+      message: "Products retrieved successfully",
+      product: product.rows,
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
 //TODO: ======================================================== Get Product Details ========================================================
 
 // desc Get Product Details
@@ -9,10 +30,9 @@ const get_Product_Details = async (req, res) => {
   const { post_id } = req.body;
   try {
     //  get the product from the database
-    const product = await pool.query(
-      "SELECT * FROM products WHERE post_id = $1",
-      [post_id]
-    );
+    const product = await pool.query("SELECT * FROM products WHERE id = $1", [
+      post_id,
+    ]);
 
     if (product.rows.length === 0) {
       return res.json({
@@ -75,7 +95,7 @@ const post_Product = async (req, res) => {
   try {
     //  get the product from the database
     const product = await pool.query(
-      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_location, product_contact,product_position) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_location, product_contact,product_position,seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10) RETURNING *",
       [
         product_name,
         product_category,
@@ -86,6 +106,7 @@ const post_Product = async (req, res) => {
         product_location,
         product_contact,
         product_position,
+        (seller_id = req.user.id),
       ]
     );
 
@@ -105,4 +126,5 @@ module.exports = {
   get_Product_Details,
   post_Product,
   list_Product_Category,
+  get_all_Products,
 };
