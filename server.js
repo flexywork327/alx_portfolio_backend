@@ -19,6 +19,8 @@ app.use("/api/v1/sellers", require("./Routes/sellersRoutes"));
 
 app.use("/api/v1/shoppers", require("./Routes/shoppersRoutes"));
 
+app.use("/api/v1/utils", require("./Routes/utilsRoutes"));
+
 // TODO: starting server
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

@@ -72,20 +72,13 @@
 -- CREATE TABLES FOR THE industries
     CREATE TABLE industries (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        industry_name VARCHAR(255) NOT NULL
     );
 
 -- CREATE TABLES FOR THE categories
-    CREATE TABLE categories (
+    CREATE TABLE product_categories (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        industry_id INTEGER REFERENCES industries(id),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        product_name VARCHAR(255) NOT NULL
     );
 
 
