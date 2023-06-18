@@ -1,37 +1,29 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getUser,
   loginUser,
-  updateUser,
-  deleteUser,
-  getAllSellers,
-  getAllShoppers,
-  activateUser,
   registerAdmin,
-  activateProduct,
-  getAllProducts,
-  deactivateProduct,
-  deleteProduct,
+  getAllSellers,
   dashBoardInfo,
+  deleteProduct,
+  getAllProducts,
+  getAllShoppers,
+  activateProduct,
+  deactivateProduct,
 } = require("../Controllers/adminControllers");
-// const { protect } = require("../Middlewares/adminAuthMiddleware");
+const { adminPrivilege } = require("../Middlewares/adminAuthMiddleware");
 
-// router.get("/me/:id", protect, getUser);
-router.get("/get_all_seller", getAllSellers);
-router.get("/dashboard_info", dashBoardInfo);
-router.get("/get_all_shoppers", getAllShoppers);
-router.get("/get_all_products", getAllProducts);
+// get Routes
+router.get("/get_all_seller", adminPrivilege, getAllSellers);
+router.get("/dashboard_info", adminPrivilege, dashBoardInfo);
+router.get("/get_all_shoppers", adminPrivilege, getAllShoppers);
+router.get("/get_all_products", adminPrivilege, getAllProducts);
 
+// post Routes
 router.post("/login", loginUser);
-router.post("/update/:id", updateUser);
 router.post("/register", registerAdmin);
-router.post("/activate_user", activateUser);
-router.post("/delete_user/:id", deleteUser);
-router.post("/delete_product", deleteProduct);
-router.post("/activate_product", activateProduct);
-router.post("/deactivate_product", deactivateProduct);
-
-// TODO:
+router.post("/delete_product", adminPrivilege, deleteProduct);
+router.post("/activate_product", adminPrivilege, activateProduct);
+router.post("/deactivate_product", adminPrivilege, deactivateProduct);
 
 module.exports = router;

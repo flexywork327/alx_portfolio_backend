@@ -1,8 +1,7 @@
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 JWT_SECRET = process.env.JWT_SECRET;
+const jwt = require("jsonwebtoken");
 const pool = require("../Config/db");
-const sendEmail = require("../Utils/Email");
 
 //TODO: ======================================================== Register User ========================================================
 
@@ -10,16 +9,7 @@ const sendEmail = require("../Utils/Email");
 // @route post /api/user/register
 // @access public
 const registerAdmin = async (req, res) => {
-  const {
-    first_name,
-    last_name,
-    email,
-    password,
-    company_name,
-    country,
-    contact,
-    business_category,
-  } = req.body;
+  const { first_name, last_name, email, password, role } = req.body;
 
   try {
     // check if user already exists
@@ -29,36 +19,9 @@ const registerAdmin = async (req, res) => {
 
     // if user exists, resend activation link
     if (user.rows.length > 0) {
-      const activationLink = `http://localhost:5000/api/v1/activate_user?email=${user.rows[0].email}&token=${user.rows[0].token}`;
-
-      const linkHtml = `
-      <a href="${activationLink}" style="background-color: #4CAF50;
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      margin: 15px 32px;
-      text-align: center;
-      text-decoration: none;">Activate Account</a>`;
-
-      const html = `<p>Hi ${user.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
-      const tittle = "Welcome to Attendance App for Roscareer";
-      const message =
-        "Email already used, check your email for the activation link";
-
-      await sendEmail(
-        // to:
-        user.rows[0].email,
-        // subject:
-        tittle,
-        // text:
-        message,
-        // html:
-        html
-      );
-
       res.json({
         status: 201,
-        message: `Email already used, check ${user.rows[0].email} for the activation link `,
+        message: `Email already used, please login`,
       });
     } else {
       // if user does not exist, create user
@@ -69,51 +32,14 @@ const registerAdmin = async (req, res) => {
 
       // insert user into database
       const newUser = await pool.query(
-        "INSERT INTO admin (first_name, last_name, email, password,company_name,country,contact,business_category,token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
-        [
-          first_name,
-          last_name,
-          email,
-          encryptedPassword,
-          company_name,
-          country,
-          contact,
-          business_category,
-          (token = generateToken(password)),
-        ]
+        "INSERT INTO admin (first_name, last_name, email, password, role) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+        [first_name, last_name, email, encryptedPassword, role]
       );
 
       if (newUser.rows[0]) {
-        const activationLink = `http://localhost:5000/api/v1/activate_user?email=${newUser.rows[0].email}&token=${newUser.rows[0].token}`;
-
-        const linkHtml = `
-        <a href="${activationLink}" style="background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        margin: 15px 32px;
-        text-align: center;
-        text-decoration: none;">Activate Account</a>`;
-
-        const html = `<p>Hi ${newUser.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
-        const tittle = "Welcome to Attendance App for Roscareer";
-        const message =
-          "Thank you for registering with us. Please click on the button below to activate your account. Link expires in 1hr.";
-
-        await sendEmail(
-          // to:
-          newUser.rows[0].email,
-          // subject:
-          tittle,
-          // text:
-          message,
-          // html:
-          html
-        );
-
         res.json({
           status: 201,
-          message: `activation link sent to ${newUser.rows[0].email}`,
+          message: `Successfully registered`,
         });
       }
     }
@@ -121,44 +47,6 @@ const registerAdmin = async (req, res) => {
     res.json({
       status: 400,
       message: `${error}`,
-    });
-  }
-};
-
-//TODO: =================================================================== ACTIVATE A NEW USER ===================================================================
-
-//POST /activate/${email}&${token}
-//@desc  Verify shopper email
-//@ private
-const activateUser = async (req, res) => {
-  const { email, token } = req.body;
-  // find user
-  const user = await pool.query("SELECT * FROM admin WHERE email = $1", [
-    email,
-  ]);
-
-  try {
-    if (user.rows[0] && user.rows[0].token === token) {
-      //  update current user activated column as true and token as null
-      const updatedUser = await pool.query(
-        "UPDATE admin SET activated = true WHERE email = $1 RETURNING *",
-        [email]
-      );
-
-      res.json({
-        status: 200,
-        message: "Successfully verified user account",
-      });
-    } else {
-      res.json({
-        status: 400,
-        message: "Invalid token or email",
-      });
-    }
-  } catch (error) {
-    res.json({
-      status: 500,
-      message: error.message,
     });
   }
 };
@@ -199,61 +87,6 @@ const loginUser = async (req, res) => {
       });
       return;
     }
-  } catch (error) {
-    res.json({
-      message: `${error}`,
-    });
-  }
-};
-
-// TODO: ======================================================== Update User ========================================================
-
-// desc Update User
-// @route post /api/v1/update
-// @access public
-const updateUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {
-      first_name,
-      last_name,
-      email,
-      company_name,
-      country,
-      contact,
-      business_category,
-    } = req.body;
-
-    //  get the user from the database
-    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
-
-    if (user.rows.length === 0) {
-      return res.json({
-        status: 400,
-        message: "User not found",
-      });
-    }
-
-    // update user
-    const updatedUser = await pool.query(
-      "UPDATE admin SET first_name = $1, last_name = $2, email = $3, company_name = $4, country = $5, contact = $6, business_category = $7  WHERE id = $8 RETURNING *",
-      [
-        first_name,
-        last_name,
-        email,
-        company_name,
-        country,
-        contact,
-        business_category,
-        id,
-      ]
-    );
-
-    res.json({
-      status: 200,
-      message: "User updated successfully",
-      updatedUser: updatedUser.rows[0],
-    });
   } catch (error) {
     res.json({
       message: `${error}`,
@@ -322,71 +155,6 @@ const getAllProducts = async (req, res) => {
       status: 200,
       message: "Successfully fetched all products",
       allProducts: allProducts.rows,
-    });
-  } catch (error) {
-    res.json({
-      status: 400,
-      message: `${error}`,
-    });
-  }
-};
-
-//TODO: ======================================================== Get  User ========================================================
-// desc Get User
-// @route get /api/user/:id
-// @access private
-const getUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
-
-    if (user.rows.length === 0) {
-      return res.json({
-        status: 400,
-        message: "User not found",
-      });
-    } else {
-      res.json({
-        status: 200,
-        message: "Successfully fetched user",
-        user: user.rows[0],
-      });
-    }
-  } catch (error) {
-    res.json({
-      status: 400,
-      message: `${error}`,
-    });
-  }
-};
-
-// TODO: ========================================= Delete user =========================================
-// desc Delete User
-// @route delete /api/user/delete/:id
-// @access private
-
-const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const user = await pool.query("SELECT * FROM admin WHERE id = $1", [id]);
-
-    if (user.rows.length === 0) {
-      return res.json({
-        status: 400,
-        message: "User not found",
-      });
-    }
-
-    const deletedUser = await pool.query("DELETE FROM admin WHERE id = $1", [
-      id,
-    ]);
-
-    res.json({
-      status: 200,
-      message: "User deleted successfully",
-      deletedUser: user.rows[0],
     });
   } catch (error) {
     res.json({
@@ -517,7 +285,7 @@ const deleteProduct = async (req, res) => {
 const dashBoardInfo = async (req, res) => {
   //  get dashboard stats
   try {
-    // const totalAdmins = await pool.query("SELECT COUNT(*) FROM admin");
+    const totalAdmins = await pool.query("SELECT COUNT(*) FROM admin");
     const totalSellers = await pool.query("SELECT COUNT(*) FROM sellers");
     const totalShoppers = await pool.query("SELECT COUNT(*) FROM shoppers");
     const totalProducts = await pool.query("SELECT COUNT(*) FROM products");
@@ -525,7 +293,7 @@ const dashBoardInfo = async (req, res) => {
     res.json({
       status: 200,
       message: "Dashboard stats",
-      // totalAdmins: totalAdmins.rows[0].count,
+      totalAdmins: totalAdmins.rows[0].count,
       totalSellers: totalSellers.rows[0].count,
       totalShoppers: totalShoppers.rows[0].count,
       totalProducts: totalProducts.rows[0].count,
@@ -549,11 +317,7 @@ const generateToken = (id) => {
 module.exports = {
   registerAdmin,
   loginUser,
-  getUser,
-  updateUser,
-  deleteUser,
   activateProduct,
-  activateUser,
   getAllShoppers,
   getAllSellers,
   getAllProducts,

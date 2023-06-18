@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Admin = require("../Model/adminModel ");
 JWT_SECRET = process.env.JWT_SECRET;
 
-const adminPrivilege = async (req, res, next) => {
+const Privilege = async (req, res, next) => {
   let token;
 
   if (
@@ -44,4 +44,4 @@ const adminPrivilege = async (req, res, next) => {
   }
 };
 
-module.exports = { adminPrivilege };
+module.exports = { Privilege };
