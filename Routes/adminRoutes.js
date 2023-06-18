@@ -26,4 +26,5 @@ router.post("/delete_product", adminPrivilege, deleteProduct);
 router.post("/activate_product", adminPrivilege, activateProduct);
 router.post("/deactivate_product", adminPrivilege, deactivateProduct);
 
+// TODO:
 module.exports = router;

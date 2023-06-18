@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
-const Admin = require("../Model/adminModel ");
+const pool = require("../Config/db");
 JWT_SECRET = process.env.JWT_SECRET;
 
-const Privilege = async (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
 
   if (
@@ -16,18 +16,15 @@ const Privilege = async (req, res, next) => {
       // Verify token
       const decoded = jwt.verify(token, JWT_SECRET);
 
-      // Get User From token
-      user = await Admin.findById(decoded.id).select("-password");
+      // Get User From token id
+      verifiedUser = await pool.query("SELECT * FROM shoppers WHERE id = $1", [
+        decoded.id,
+      ]);
 
-      // checks if user is a super admin and has all privileges then next()
-      if (user.role === "admin" || user.role === "super-admin") {
-        next();
-      } else {
-        res.json({
-          message: "You are not authorized to perform this action",
-          status: 401,
-        });
-      }
+      // Add user from payload
+      req.user = verifiedUser.rows[0];
+
+      next();
     } catch (error) {
       res.json({
         message: `${error.message}`,
@@ -44,4 +41,4 @@ const Privilege = async (req, res, next) => {
   }
 };
 
-module.exports = { Privilege };
+module.exports = { protect };

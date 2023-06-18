@@ -21,6 +21,55 @@ const get_all_Products = async (req, res) => {
     });
   }
 };
+
+//TODO: ======================================================== Get All Active Product ========================================================
+
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const activeProduct = async (req, res) => {
+  try {
+    //  get the product from the database
+    const product = await pool.query(
+      "SELECT * FROM products WHERE product_activated = true"
+    );
+
+    res.json({
+      status: 200,
+      message: "Active Products retrieved successfully",
+      product: product.rows,
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
+//TODO: ======================================================== Get All Inactive Product ========================================================
+
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const inactiveProduct = async (req, res) => {
+  try {
+    //  get the product from the database
+    const product = await pool.query(
+      "SELECT * FROM products WHERE product_activated = false"
+    );
+
+    res.json({
+      status: 200,
+      message: "Inactive Products retrieved successfully",
+      product: product.rows,
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 //TODO: ======================================================== Get Product Details ========================================================
 
 // desc Get Product Details
@@ -120,9 +169,60 @@ const post_Product = async (req, res) => {
   }
 };
 
+// TODO: ======================================================== Edit Product ========================================================
+
+// desc Post Product
+// @route post /post_product
+// @access public
+const editProduct = async (req, res) => {
+  // Edit Product
+  const {
+    product_name,
+    product_category,
+    product_description,
+    product_price,
+    product_image,
+    product_quantity,
+    product_location,
+    product_position,
+    product_id,
+  } = req.body;
+
+  try {
+    //  get the product from the database
+    const product = await pool.query(
+      "UPDATE products SET product_name = $1, product_category = $2, product_description = $3, product_price = $4, product_image = $5, product_quantity = $6, product_location = $7, product_position = $8 WHERE id = $9 RETURNING *",
+      [
+        product_name,
+        product_category,
+        product_description,
+        product_price,
+        product_image,
+        product_quantity,
+        product_location,
+        product_position,
+        product_id,
+      ]
+    );
+
+    res.json({
+      status: 200,
+      message: "Product edited successfully",
+      product: product.rows[0],
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
   get_Product_Details,
   post_Product,
   list_Product_Category,
   get_all_Products,
+  editProduct,
+  activeProduct,
+  inactiveProduct,
 };

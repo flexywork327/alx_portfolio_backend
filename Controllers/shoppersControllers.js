@@ -285,6 +285,77 @@ const changePassword = async (req, res) => {
   }
 };
 
+// TODO: ========================================= Change user Password =========================================
+// desc Change User Password
+// @route post /api/user/change-password/:id
+// @access private
+const forgotPassword = async (req, res) => {
+  //  forgot password
+
+  try {
+    const { email } = req.body;
+
+    //  get the user from the database
+    const user = await pool.query(
+      "SELECT id, email,created_at  FROM shoppers WHERE email = $1",
+      [email]
+    );
+
+    if (user.rows.length === 0) {
+      return res.json({
+        status: 400,
+        message: "User not found",
+      });
+    }
+
+    // generate new password
+    const newPassword = Math.random().toString(36).slice(-8);
+
+    // hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // update user
+    const updatedUser = await pool.query(
+      "UPDATE shoppers SET password = $1 WHERE email = $2 RETURNING *",
+      [hashedPassword, email]
+    );
+
+    // send email to user
+    const html = `<p  style="
+    width: 50%;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 50px;
+    margin: 0 auto;
+    border-radius: 10px;
+  ">Your new password is ${newPassword}</p>`;
+    const tittle = "Password Reset";
+    const message = "Your new password is " + newPassword;
+
+    await sendEmail(
+      // to:
+      email,
+      // subject:
+      tittle,
+      // text:
+      message,
+      // html:
+      html
+    );
+
+    res.json({
+      status: 200,
+      message: "Password updated successfully",
+      updatedUser: updatedUser.rows[0],
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 // TODO: ========================================= Generate token =========================================
 
 const generateToken = (id) => {
@@ -294,9 +365,10 @@ const generateToken = (id) => {
 };
 
 module.exports = {
-  registerShopper,
-  loginShopper,
   getShopper,
+  loginShopper,
   changePassword,
+  forgotPassword,
+  registerShopper,
   activateShopper,
 };

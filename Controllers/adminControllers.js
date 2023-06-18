@@ -171,10 +171,10 @@ const getAllProducts = async (req, res) => {
 const activateProduct = async (req, res) => {
   //  activate product
   try {
-    const { id } = req.body;
+    const { product_id } = req.body;
 
     const product = await pool.query("SELECT * FROM products WHERE id = $1", [
-      id,
+      product_id,
     ]);
 
     if (product.rows.length === 0) {
@@ -186,7 +186,7 @@ const activateProduct = async (req, res) => {
 
     const activatedProduct = await pool.query(
       "UPDATE products SET product_activated = true WHERE id = $1 RETURNING *",
-      [id]
+      [product_id]
     );
 
     res.json({
@@ -209,10 +209,10 @@ const activateProduct = async (req, res) => {
 const deactivateProduct = async (req, res) => {
   //  deactivate product
   try {
-    const { id } = req.body;
+    const { product_id } = req.body;
 
     const product = await pool.query("SELECT * FROM products WHERE id = $1", [
-      id,
+      product_id,
     ]);
 
     if (product.rows.length === 0) {
@@ -224,7 +224,7 @@ const deactivateProduct = async (req, res) => {
 
     const activatedProduct = await pool.query(
       "UPDATE products SET product_activated = false WHERE id = $1 RETURNING *",
-      [id]
+      [product_id]
     );
 
     res.json({
