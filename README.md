@@ -39,12 +39,17 @@ This is a portfolio project for ALX to showcase the skills and experience earned
 - Create a .env file in the root directory of the project and add the following environment variables
 
   ```
-  PORT=5000
-  DATABASE_URL=postgres://postgres:postgres@localhost:5432/portfolio
-  JWT_SECRET=your_secret_key
-  CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-  CLOUDINARY_API_KEY=your_cloudinary_api_key
-  CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+  PORT = 5000
+  JWT_SECRET = your_secret_key
+  POSTGRESS_USERNAME = your_postgress_username
+  POSTGRESS_PASSWORD = your_postgress_password
+  POSTGRESS_DB = your_postgress_db
+  POSTGRESS_HOST = your_postgress_host
+  POSTGRESS_PORT = your_postgress_port
+
+  CLOUDINARY_CLOUD_NAME = your_cloudinary_cloud_name
+  CLOUDINARY_API_KEY = your_cloudinary_api_key
+  CLOUDINARY_API_SECRET = your_cloudinary_api_secret
   ```
 
 - Run the application

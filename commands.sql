@@ -3,19 +3,20 @@
 
 -- connect to database
     \c portfolio;
+    \d -- show all tables in database
+    \d users -- show all tables in users database
+    \? -- show all commands
+
 
 -- create table for Admin
     CREATE TABLE admin (
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(255) NOT NULL,
-        token VARCHAR(255),
-        activated BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
 -- CREATE TABLES FOR THE SELLERS
@@ -23,11 +24,11 @@
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        company_name VARCHAR(255) NOT NULL,
+        company_name VARCHAR(255) NOT NULL UNIQUE,
         country VARCHAR(255) NOT NULL,
-        contact VARCHAR(255) NOT NULL,
+        contact VARCHAR(255) NOT NULL UNIQUE,
         business_category VARCHAR(255) NOT NULL,
         token VARCHAR(255),
         activated BOOLEAN DEFAULT false,
@@ -41,7 +42,7 @@
 -- CREATE TABLES FOR THE SHOPPERS
     CREATE TABLE shoppers (
         id SERIAL PRIMARY KEY,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         token VARCHAR(255),
         activated BOOLEAN DEFAULT false,
@@ -51,13 +52,16 @@
 -- CREATE TABLES FOR THE PRODUCTS
     CREATE TABLE products (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        price VARCHAR(255) NOT NULL,
-        quantity VARCHAR(255) NOT NULL,
-        image VARCHAR(255) NOT NULL,
-        category VARCHAR(255) NOT NULL,
+        product_name VARCHAR(255) NOT NULL,
+        product_category VARCHAR(255) NOT NULL,
+        product_description VARCHAR(255) NOT NULL,
+        product_price VARCHAR(255) NOT NULL,
+        product_quantity VARCHAR(255) NOT NULL,
+        product_image VARCHAR(255) NOT NULL,
+        product_location VARCHAR(255) NOT NULL,
+        product_position VARCHAR(255) NOT NULL,
         seller_id INTEGER REFERENCES sellers(id),
+        product_activated BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -65,20 +69,13 @@
 -- CREATE TABLES FOR THE industries
     CREATE TABLE industries (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        industry_name VARCHAR(255) NOT NULL UNIQUE
     );
 
 -- CREATE TABLES FOR THE categories
-    CREATE TABLE categories (
+    CREATE TABLE product_categories (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        industry_id INTEGER REFERENCES industries(id),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        product_category_name VARCHAR(255) NOT NULL UNIQUE
     );
 
 

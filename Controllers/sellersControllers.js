@@ -29,7 +29,7 @@ const registerSeller = async (req, res) => {
 
     // if user exists, resend activation link
     if (user.rows.length > 0) {
-      const activationLink = `http://localhost:5000/api/v1/activate_user?email=${user.rows[0].email}&token=${user.rows[0].token}`;
+      const activationLink = `http://localhost:5000/api/v1/sellers/activate_user?email=${user.rows[0].email}&token=${user.rows[0].token}`;
 
       const linkHtml = `
       <a href="${activationLink}" style="background-color: #0d6efd;
@@ -91,7 +91,7 @@ const registerSeller = async (req, res) => {
       );
 
       if (newUser.rows[0]) {
-        const activationLink = `http://localhost:5000/api/v1/activate_user?email=${newUser.rows[0].email}&token=${newUser.rows[0].token}`;
+        const activationLink = `http://localhost:5000/api/v1/sellers/activate_user?email=${newUser.rows[0].email}&token=${newUser.rows[0].token}`;
 
         const linkHtml = `
         <a href="${activationLink}" style="background-color: #0d6efd;
@@ -155,7 +155,7 @@ const activateSeller = async (req, res) => {
     if (user.rows[0] && user.rows[0].token === token) {
       //  update current user activated column as true and token as null
       const updatedUser = await pool.query(
-        "UPDATE users SET activated = true WHERE email = $1 RETURNING *",
+        "UPDATE sellers SET activated = true WHERE email = $1 RETURNING *",
         [email]
       );
 
@@ -359,6 +359,133 @@ const changePassword = async (req, res) => {
   }
 };
 
+// TODO: ========================================= Forgot Password =========================================
+// desc Change User Password
+// @route post /api/user/change-password/:id
+// @access private
+const forgotPassword = async (req, res) => {
+  // forgot password
+  try {
+    const { email } = req.body;
+
+    //  get the user from the database
+    const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
+      email,
+    ]);
+
+    if (user.rows.length === 0) {
+      return res.json({
+        status: 400,
+        message: "User not found",
+      });
+    }
+
+    // generate token
+    const token = generateToken(user.rows[0].id);
+
+    // update user
+    const updatedUser = await pool.query(
+      "UPDATE sellers SET token = $1 WHERE email = $2 RETURNING *",
+      [token, email]
+    );
+
+    const resetLink = `http://localhost:3000/reset-password?email=${updatedUser.rows[0].email}&token=${updatedUser.rows[0].token}`;
+
+    const linkHtml = `
+    <a href="${resetLink}" style="background-color: #0d6efd;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    ">Reset Password</a>`;
+
+    const html = `<p  style="
+    width: 50%;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 50px;
+    margin: 0 auto;
+    border-radius: 10px;
+};
+  ">Hi ${updatedUser.rows[0].last_name}, Click on the button below to reset your password. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+    const tittle = "Welcome to ---";
+    const message =
+      "Thank you for registering with us. Please click on the button below to activate your account. Link expires in 1hr.";
+
+    await sendEmail(
+      // to:
+      updatedUser.rows[0].email,
+      // subject:
+      tittle,
+      // text:
+      message,
+      // html:
+      html
+    );
+
+    res.json({
+      status: 200,
+      message: "Password reset link sent to your email",
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+// TODO: ========================================= Reset Password =========================================
+// desc Change User Password
+// @route post /api/user/change-password/:id
+// @access private
+const resetPassword = async (req, res) => {
+  // Reset password
+  try {
+    const { email, token, newPassword } = req.body;
+
+    //  get the user from the database
+    const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
+      email,
+    ]);
+
+    if (user.rows.length === 0) {
+      return res.json({
+        status: 400,
+        message: "User not found",
+      });
+    }
+
+    // check if token is valid
+    if (user.rows[0] && user.rows[0].token === token) {
+      // hash new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+      // update user
+      const updatedUser = await pool.query(
+        "UPDATE sellers SET password = $1 WHERE email = $2 RETURNING *",
+        [hashedPassword, email]
+      );
+
+      res.json({
+        status: 200,
+        message: "Password updated successfully",
+        updatedUser: updatedUser.rows[0],
+      });
+    } else {
+      res.json({
+        status: 400,
+        message: "Invalid token or email",
+      });
+      return;
+    }
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 // TODO: ========================================= Generate token =========================================
 
 const generateToken = (id) => {
@@ -370,8 +497,10 @@ const generateToken = (id) => {
 module.exports = {
   getUser,
   loginSeller,
+  resetPassword,
   updateSeller,
   registerSeller,
   changePassword,
   activateSeller,
+  forgotPassword,
 };

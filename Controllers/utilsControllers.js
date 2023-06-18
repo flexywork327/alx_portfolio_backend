@@ -10,18 +10,86 @@ const getIndustries = async (req, res) => {
     const industries = await pool.query(
       "SELECT *  FROM industries ORDER BY industry_name ASC"
     );
-    if (industries.rows.length === 0) {
+
+    res.json({
+      status: 200,
+      message: "Industries retrieved successfully",
+      industries: industries.rows,
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+// TODO: ========================================= Get Products Category List =========================================
+// desc Get Industries List
+// @route get /api/user/industries
+// @access public
+const getProduct_category = async (req, res) => {
+  try {
+    //  get the industries from the database
+    const product_categories = await pool.query(
+      "SELECT *  FROM product_categories ORDER BY product_name ASC"
+    );
+    if (product_categories.rows.length === 0) {
       return res.json({
         status: 404,
-        message: "No industries found",
+        message: "No product_categories found",
       });
-    } else if (industries.rows.length > 0) {
+    } else if (product_categories.rows.length > 0) {
       res.json({
         status: 200,
-        message: "Industries retrieved successfully",
-        industries: industries.rows[0],
+        message: "product_categories retrieved successfully",
+        product_categories: product_categories.rows,
       });
     }
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+// TODO: ========================================= Post Industries =========================================
+// desc Get Industries List
+// @route get /api/user/industries
+// @access public
+const postIndustries = async (req, res) => {
+  // post industries to the database
+  try {
+    const { industry_name } = req.body;
+    const newIndustry = await pool.query(
+      "INSERT INTO industries (industry_name) VALUES($1) RETURNING *",
+      [industry_name]
+    );
+    res.json({
+      status: 200,
+      message: "Industry added successfully",
+      industry: newIndustry.rows[0],
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+// TODO: ========================================= Post Product Categories =========================================
+// desc Get Industries List
+// @route get /api/user/industries
+// @access public
+const postProduct_category = async (req, res) => {
+  //  post product_categories to the database
+  try {
+    const { product_category_name } = req.body;
+    const newProduct_category = await pool.query(
+      "INSERT INTO product_categories (product_category_name) VALUES($1) RETURNING *",
+      [product_category_name]
+    );
+    res.json({
+      status: 200,
+      message: "Product category added successfully",
+      product_category: newProduct_category.rows[0],
+    });
   } catch (error) {
     res.json({
       message: `${error}`,
@@ -31,4 +99,7 @@ const getIndustries = async (req, res) => {
 
 module.exports = {
   getIndustries,
+  getProduct_category,
+  postIndustries,
+  postProduct_category,
 };

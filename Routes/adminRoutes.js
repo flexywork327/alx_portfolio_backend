@@ -1,25 +1,30 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getUser,
   loginUser,
-  updateUser,
-  deleteUser,
-  getAllUsers,
-  activateUser,
   registerAdmin,
-  changePassword,
+  getAllSellers,
+  dashBoardInfo,
+  deleteProduct,
+  getAllProducts,
+  getAllShoppers,
+  activateProduct,
+  deactivateProduct,
 } = require("../Controllers/adminControllers");
-const { protect } = require("../Middlewares/adminAuthMiddleware");
+const { adminPrivilege } = require("../Middlewares/adminAuthMiddleware");
 
-router.get("/users", getAllUsers);
-router.get("/me/:id", protect, getUser);
+// get Routes
+router.get("/get_all_seller", adminPrivilege, getAllSellers);
+router.get("/dashboard_info", adminPrivilege, dashBoardInfo);
+router.get("/get_all_shoppers", adminPrivilege, getAllShoppers);
+router.get("/get_all_products", adminPrivilege, getAllProducts);
 
+// post Routes
 router.post("/login", loginUser);
 router.post("/register", registerAdmin);
-router.post("/activate_user", activateUser);
-router.post("/update/:id", protect, updateUser);
-router.post("/delete_user/:id", protect, deleteUser);
-router.post("/change_password/:id", protect, changePassword);
+router.post("/delete_product", adminPrivilege, deleteProduct);
+router.post("/activate_product", adminPrivilege, activateProduct);
+router.post("/deactivate_product", adminPrivilege, deactivateProduct);
 
+// TODO:
 module.exports = router;
