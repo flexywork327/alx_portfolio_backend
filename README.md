@@ -80,12 +80,6 @@ This is a portfolio project for ALX to showcase the skills and experience earned
   $ sudo -u postgres psql
   ```
 
-- enter into the psql shell
-
-  ```
-  $ psql
-  ```
-
 ## API Documentation
 
 The API documentation for this project can be found [here](https://documenter.getpostman.com/view/13392160/Tz5tZ6QJ)
