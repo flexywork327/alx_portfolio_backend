@@ -1,7 +1,7 @@
 {
-  "name": "license",
+  "name": "portfolio_backend",
   "version": "1.0.0",
-  "description": "Backend Service",
+  "description": "Backend Service for my portfolio project for the ALX Software Engineering Program 2023",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
