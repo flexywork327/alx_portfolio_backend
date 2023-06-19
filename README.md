@@ -60,6 +60,32 @@ This is a portfolio project for ALX to showcase the skills and experience earned
 
 - The application should now be running at http://localhost:5000
 
+## Database Schema
+
+- connecting the database to the application
+
+  ```
+  const pool = new Pool({
+    user: process.env.POSTGRESS_USERNAME,
+    password: process.env.POSTGRESS_PASSWORD,
+    host: process.env.POSTGRESS_HOST,
+    port: process.env.POSTGRESS_PORT,
+    database: process.env.POSTGRESS_DB,
+  });
+  ```
+
+- switching to psql user from your terminal
+
+  ```
+  $ sudo -u postgres psql
+  ```
+
+- enter into the psql shell
+
+  ```
+  $ psql
+  ```
+
 ## API Documentation
 
 The API documentation for this project can be found [here](https://documenter.getpostman.com/view/13392160/Tz5tZ6QJ)
