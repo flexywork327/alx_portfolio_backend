@@ -88,4 +88,4 @@ The API documentation for this project can be found [here](https://documenter.ge
 
 - [Felix Asare](https://github.com/flexywork327)
 
-- [Foster Adu-Gyamfi](https://github.com/Foxynero)
+- [Foster Adu-Gyamfi](https://github.com/Foxynero)(adugyamfifoster@gmail.com)
