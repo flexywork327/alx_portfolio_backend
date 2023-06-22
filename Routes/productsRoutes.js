@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../Utils/multer");
 const {
   editProduct,
   post_Product,
@@ -18,8 +19,20 @@ router.get("/get_all_products", get_all_Products);
 router.get("/product_category", list_Product_Category);
 
 // post Routes
-router.post("/edit_product", protect, editProduct);
-router.post("/post_product", protect, post_Product);
+router.post(
+  "/edit_product",
+  protect,
+  upload.single("product_image"),
+  editProduct
+);
+
+router.post(
+  "/post_product",
+  protect,
+  upload.single("product_image"),
+  post_Product
+);
+
 router.post("/get_product_detail", get_Product_Details);
 
 // TODO:

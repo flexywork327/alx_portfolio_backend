@@ -1,11 +1,17 @@
-const Pool = require("pg").Pool;
+const { Pool } = require("pg");
 
 const pool = new Pool({
-  user: process.env.POSTGRESS_USERNAME,
-  password: process.env.POSTGRESS_PASSWORD,
-  host: process.env.POSTGRESS_HOST,
-  port: process.env.POSTGRESS_PORT,
-  database: process.env.POSTGRESS_DB,
+  user: process.env.POSTGRES_USER,
+  host: process.env.POSTGRES_HOST,
+  database: process.env.POSTGRES_DATABASE,
+  password: process.env.POSTGRES_PASSWORD,
+
+  port: process.env.POSTGRES_PORT,
+
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  // connectionString: process.env.POSTGRES_SSL,
 });
 
 module.exports = pool;
