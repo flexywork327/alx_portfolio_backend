@@ -40,26 +40,15 @@ const registerSeller = async (req, res) => {
       border-radius: 6px;
       ">Activate Account</a>`;
 
-      const html = `<p  style="
-      width: 50%;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      padding: 50px;
-      margin: 0 auto;
-      border-radius: 10px;
-    ">Hi ${user.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
-      const tittle = "Welcome to Attendance App for Roscareer";
-      const message =
-        "Email already used, check your email for the activation link";
+      const html = `<p style="font-size: 1.5rem;>Hi ${user.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+      const tittle = "Welcome to the Justlink family";
 
       await sendEmail(
         // to:
         user.rows[0].email,
         // subject:
         tittle,
-        // text:
-        message,
-        // html:
+        // html message:
         html
       );
 
@@ -102,26 +91,15 @@ const registerSeller = async (req, res) => {
           border-radius: 6px;
         ">Activate Account</a>`;
 
-        const html = `<p  style="
-        width: 50%;
-        text-align: center;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        padding: 50px;
-        margin: 0 auto;
-        border-radius: 10px;
-      ">Hi ${newUser.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
-        const tittle = "Welcome to Attendance App for Roscareer";
-        const message =
-          "Thank you for registering with us. Please click on the button below to activate your account. Link expires in 1hr.";
+        const html = `<p  style="font-size: 1.5rem;">Hi ${newUser.rows[0].last_name}, Click on the button below to activate your account. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+        const tittle = "Welcome to the Justlink family";
 
         await sendEmail(
           // to:
           newUser.rows[0].email,
           // subject:
           tittle,
-          // text:
-          message,
-          // html:
+          // html message:
           html
         );
 
@@ -400,27 +378,15 @@ const forgotPassword = async (req, res) => {
     border-radius: 6px;
     ">Reset Password</a>`;
 
-    const html = `<p  style="
-    width: 50%;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    padding: 50px;
-    margin: 0 auto;
-    border-radius: 10px;
-};
-  ">Hi ${updatedUser.rows[0].last_name}, Click on the button below to reset your password. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
-    const tittle = "Welcome to ---";
-    const message =
-      "Thank you for registering with us. Please click on the button below to activate your account. Link expires in 1hr.";
+    const html = `<p  style="font-size: 1.5rem;">Hi ${updatedUser.rows[0].last_name}, Click on the button below to reset your password. Link expires in 1hr.</p> <br>${linkHtml}</br>`;
+    const tittle = "Forgot Password";
 
     await sendEmail(
       // to:
       updatedUser.rows[0].email,
       // subject:
       tittle,
-      // text:
-      message,
-      // html:
+      // html message:
       html
     );
 
