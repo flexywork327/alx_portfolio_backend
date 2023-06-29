@@ -1,6 +1,8 @@
 const nodemailer = require("nodemailer");
+const google_user = process.env.GOOGLE_USER;
+const google_password = process.env.GOOGLE_PASSWORD;
 
-module.exports = async (email, subject, text, html) => {
+module.exports = async (email, subject, html) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -8,16 +10,15 @@ module.exports = async (email, subject, text, html) => {
       post: 587,
       secure: true,
       auth: {
-        user: "flexywork327@gmail.com",
-        pass: "fxlrxghcybanlsjo",
+        user: google_user,
+        pass: google_password,
       },
     });
 
     await transporter.sendMail({
-      from: "flexywork327@gmail.com",
+      from: google_user,
       to: email,
       subject,
-      text,
       html,
     });
 

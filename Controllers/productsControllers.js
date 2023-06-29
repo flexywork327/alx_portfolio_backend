@@ -1,4 +1,5 @@
 const pool = require("../Config/db");
+const cloudinary = require("../Utils/cloudinary");
 
 //TODO: ======================================================== Get All Product ========================================================
 
@@ -134,13 +135,19 @@ const post_Product = async (req, res) => {
     product_category,
     product_description,
     product_price,
-    product_image,
     product_quantity,
     product_location,
     product_position, //TODO: add product_position as a parameter to put the item in the right position on the site either on the New or Top Ranking section
   } = req.body;
+  const files = req.file;
 
   try {
+    // Upload image to cloudinary
+    console.log(files);
+    const result = await cloudinary.uploader.upload(files.path, {
+      folder: "Justlink",
+    });
+
     //  get the product from the database
     const product = await pool.query(
       "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_location,product_position,seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
@@ -149,7 +156,7 @@ const post_Product = async (req, res) => {
         product_category,
         product_description,
         product_price,
-        product_image,
+        (product_image = result.secure_url),
         product_quantity,
         product_location,
         product_position,
@@ -181,14 +188,19 @@ const editProduct = async (req, res) => {
     product_category,
     product_description,
     product_price,
-    product_image,
     product_quantity,
     product_location,
     product_position,
     product_id,
   } = req.body;
+  const files = req.file;
 
   try {
+    // Upload image to cloudinary
+    console.log(files);
+    const result = await cloudinary.uploader.upload(files.path, {
+      folder: "Justlink",
+    });
     //  get the product from the database
     const product = await pool.query(
       "UPDATE products SET product_name = $1, product_category = $2, product_description = $3, product_price = $4, product_image = $5, product_quantity = $6, product_location = $7, product_position = $8 WHERE id = $9 RETURNING *",
@@ -197,7 +209,7 @@ const editProduct = async (req, res) => {
         product_category,
         product_description,
         product_price,
-        product_image,
+        (product_image = result.secure_url),
         product_quantity,
         product_location,
         product_position,
