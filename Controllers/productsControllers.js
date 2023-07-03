@@ -111,7 +111,9 @@ const get_Product_Details = async (req, res) => {
 const list_Product_Category = async (req, res) => {
   // find PRODUCT CATEGORY from the database
   try {
-    const product_category = await pool.query("SELECT * FROM product_category");
+    const product_category = await pool.query(
+      "SELECT * FROM product_categories"
+    );
     res.json({
       status: 200,
       message: "Product Category retrieved successfully",
