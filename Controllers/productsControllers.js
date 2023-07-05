@@ -259,9 +259,42 @@ const get_Product_By_Category = async (req, res) => {
   }
 };
 
+// TODO: ======================================================== Search Product ========================================================
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const search_Product = async (req, res) => {
+  const { product_name } = req.body;
+  try {
+    //  get the product from the database
+    const product = await pool.query(
+      "SELECT * FROM products WHERE product_name LIKE $1 AND product_activated = true",
+      ["%" + product_name + "%"]
+    );
+
+    if (product.rows.length === 0) {
+      return res.json({
+        status: 404,
+        message: "Product not found",
+      });
+    } else if (product.rows.length > 0) {
+      res.json({
+        status: 200,
+        message: "Product retrieved successfully",
+        product: product.rows,
+      });
+    }
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
   get_Product_Details,
   post_Product,
+  search_Product,
   list_Product_Category,
   get_all_Products,
   editProduct,

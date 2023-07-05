@@ -5,6 +5,7 @@ const {
   editProduct,
   post_Product,
   activeProduct,
+  search_Product,
   inactiveProduct,
   get_all_Products,
   get_Product_Details,
@@ -34,6 +35,7 @@ router.post(
   post_Product
 );
 
+router.post("/search_product", search_Product);
 router.post("/get_product_detail", get_Product_Details);
 router.post("/get_product_by_category", get_Product_By_Category);
 
