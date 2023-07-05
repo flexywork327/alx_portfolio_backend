@@ -9,6 +9,7 @@ const {
   get_all_Products,
   get_Product_Details,
   list_Product_Category,
+  get_Product_By_Category,
 } = require("../Controllers/productsControllers");
 const { protect } = require("../Middlewares/sellerAuthMiddleware");
 
@@ -34,6 +35,7 @@ router.post(
 );
 
 router.post("/get_product_detail", get_Product_Details);
+router.post("/get_product_by_category", get_Product_By_Category);
 
 // TODO:
 

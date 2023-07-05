@@ -97,9 +97,64 @@ const postProduct_category = async (req, res) => {
   }
 };
 
+// TODO: ========================================= Post Product Sections =========================================
+// desc Get Industries List
+// @route get /api/user/industries
+// @access public
+const postProduct_sections = async (req, res) => {
+  //  post product_categories to the database
+  try {
+    const { product_section_name } = req.body;
+    const newProduct_section = await pool.query(
+      "INSERT INTO product_sections (product_section_name) VALUES($1) RETURNING *",
+      [product_section_name]
+    );
+    res.json({
+      status: 200,
+      message: "Product section added successfully",
+      product_section: newProduct_section.rows[0],
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
+// TODO: ========================================= Get Product Sections List =========================================
+// desc Get Industries List
+// @route get /api/user/industries
+// @access public
+const getProduct_sections = async (req, res) => {
+  try {
+    //  get the industries from the database
+    const product_sections = await pool.query(
+      "SELECT *  FROM product_sections ORDER BY product_section_name ASC"
+    );
+    if (product_sections.rows.length === 0) {
+      return res.json({
+        status: 404,
+        message: "No product_sections found",
+      });
+    } else if (product_sections.rows.length > 0) {
+      res.json({
+        status: 200,
+        message: "product_sections retrieved successfully",
+        product_sections: product_sections.rows,
+      });
+    }
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
   getIndustries,
   getProduct_category,
   postIndustries,
   postProduct_category,
+  postProduct_sections,
+  getProduct_sections,
 };

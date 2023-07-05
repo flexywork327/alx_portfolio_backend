@@ -111,9 +111,7 @@ const get_Product_Details = async (req, res) => {
 const list_Product_Category = async (req, res) => {
   // find PRODUCT CATEGORY from the database
   try {
-    const product_category = await pool.query(
-      "SELECT * FROM product_categories"
-    );
+    const product_category = await pool.query("SELECT * FROM product_category");
     res.json({
       status: 200,
       message: "Product Category retrieved successfully",
@@ -138,8 +136,7 @@ const post_Product = async (req, res) => {
     product_description,
     product_price,
     product_quantity,
-    product_location,
-    product_position, //TODO: add product_position as a parameter to put the item in the right position on the site either on the New or Top Ranking section
+    product_section,
   } = req.body;
   const files = req.file;
 
@@ -152,17 +149,16 @@ const post_Product = async (req, res) => {
 
     //  get the product from the database
     const product = await pool.query(
-      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_location,product_position,seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_section,seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
       [
         product_name,
         product_category,
         product_description,
         product_price,
-        (product_image = result.secure_url),
+        result.secure_url,
         product_quantity,
-        product_location,
-        product_position,
-        (seller_id = req.user.id),
+        product_section,
+        req.user.id,
       ]
     );
 
@@ -191,7 +187,7 @@ const editProduct = async (req, res) => {
     product_description,
     product_price,
     product_quantity,
-    product_location,
+    product_section,
     product_position,
     product_id,
   } = req.body;
@@ -205,7 +201,7 @@ const editProduct = async (req, res) => {
     });
     //  get the product from the database
     const product = await pool.query(
-      "UPDATE products SET product_name = $1, product_category = $2, product_description = $3, product_price = $4, product_image = $5, product_quantity = $6, product_location = $7, product_position = $8 WHERE id = $9 RETURNING *",
+      "UPDATE products SET product_name = $1, product_category = $2, product_description = $3, product_price = $4, product_image = $5, product_quantity = $6, product_section = $7, product_position = $8 WHERE id = $9 RETURNING *",
       [
         product_name,
         product_category,
@@ -213,7 +209,7 @@ const editProduct = async (req, res) => {
         product_price,
         (product_image = result.secure_url),
         product_quantity,
-        product_location,
+        product_section,
         product_position,
         product_id,
       ]
@@ -231,6 +227,38 @@ const editProduct = async (req, res) => {
   }
 };
 
+// TODO: ======================================================== Get Product By Category ========================================================
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const get_Product_By_Category = async (req, res) => {
+  const { product_section } = req.body;
+  try {
+    //  get the product from the database
+    const product = await pool.query(
+      "SELECT * FROM products WHERE product_section = $1 AND product_activated = true",
+      [product_section]
+    );
+
+    if (product.rows.length === 0) {
+      return res.json({
+        status: 404,
+        message: "Product not found",
+      });
+    } else if (product.rows.length > 0) {
+      res.json({
+        status: 200,
+        message: "Product retrieved successfully",
+        product: product.rows,
+      });
+    }
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
   get_Product_Details,
   post_Product,
@@ -239,4 +267,5 @@ module.exports = {
   editProduct,
   activeProduct,
   inactiveProduct,
+  get_Product_By_Category,
 };

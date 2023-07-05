@@ -58,8 +58,7 @@
         product_price VARCHAR(255) NOT NULL,
         product_quantity VARCHAR(255) NOT NULL,
         product_image VARCHAR(255) NOT NULL,
-        product_location VARCHAR(255) NOT NULL,
-        product_position VARCHAR(255) NOT NULL,
+        product_section VARCHAR(255) REFERENCES product_sections(product_section_name),
         seller_id INTEGER REFERENCES sellers(id),
         product_activated BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -70,6 +69,12 @@
     CREATE TABLE industries (
         id SERIAL PRIMARY KEY,
         industry_name VARCHAR(255) NOT NULL UNIQUE
+    );
+
+-- CREATE TABLES FOR product sections
+    CREATE TABLE product_sections (
+        id SERIAL PRIMARY KEY,
+        product_section_name VARCHAR(255) NOT NULL UNIQUE
     );
 
 -- CREATE TABLES FOR THE categories
