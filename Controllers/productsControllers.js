@@ -296,7 +296,7 @@ const search_Product = async (req, res) => {
 // @route post /get_product_detail
 // @access public
 const addToCart = async (req, res) => {
-  const { product_id, product_quantity } = req.body;
+  const { product_id, cart_quantity } = req.body;
   try {
     //  get the product from the database
     const product = await pool.query("SELECT * FROM products WHERE id = $1", [
@@ -309,9 +309,38 @@ const addToCart = async (req, res) => {
         message: "Product not found",
       });
     } else if (product.rows.length > 0) {
+      const {
+        product_name,
+        product_category,
+        product_description,
+        product_price,
+        product_image,
+        product_section,
+        product_activated,
+        seller_id,
+      } = product.rows[0];
+
+      const add_Product = await pool.query(
+        "INSERT INTO cart (product_name, product_category, product_description, product_price, product_quantity,product_image, product_section,seller_id,product_activated,cart_quantity,shopper_id,total_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+        [
+          product_name,
+          product_category,
+          product_description,
+          product_price,
+          product_quantity,
+          product_image,
+          product_section,
+          seller_id,
+          product_activated,
+          cart_quantity,
+          req.user.id,
+          (total_cost = product_price * cart_quantity),
+        ]
+      );
+
       res.json({
         status: 200,
-        message: "Product retrieved successfully",
+        message: "Product added to cart successfully",
         product: product.rows[0],
       });
     }

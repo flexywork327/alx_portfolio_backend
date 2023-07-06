@@ -315,13 +315,13 @@ const generateToken = (id) => {
 };
 
 module.exports = {
-  registerAdmin,
   loginUser,
-  activateProduct,
-  getAllShoppers,
+  registerAdmin,
   getAllSellers,
+  getAllShoppers,
   getAllProducts,
-  deactivateProduct,
   deleteProduct,
   dashBoardInfo,
+  activateProduct,
+  deactivateProduct,
 };

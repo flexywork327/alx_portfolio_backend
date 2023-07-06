@@ -65,6 +65,25 @@
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+
+-- CREATE TABLES FOR THE CART
+    CREATE TABLE cart (
+        cart_id SERIAL PRIMARY KEY,
+        product_name VARCHAR(255) NOT NULL,
+        product_category VARCHAR(255) NOT NULL,
+        product_description VARCHAR(255) NOT NULL,
+        product_price VARCHAR(255) NOT NULL,
+        product_quantity VARCHAR(255) NOT NULL,
+        product_image VARCHAR(255) NOT NULL,
+        product_section VARCHAR(255) REFERENCES product_sections(product_section_name),
+        seller_id INTEGER REFERENCES sellers(id),
+        product_activated BOOLEAN,
+        cart_quantity VARCHAR(255),
+        shopper_id VARCHAR(255),
+        total_cost VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
 -- CREATE TABLES FOR THE industries
     CREATE TABLE industries (
         id SERIAL PRIMARY KEY,
