@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../Utils/multer");
 const {
+  addToCart,
   editProduct,
   post_Product,
   activeProduct,
@@ -36,6 +37,7 @@ router.post(
 );
 
 router.post("/search_product", search_Product);
+router.post("/add_to_cart", addToCart);
 router.post("/get_product_detail", get_Product_Details);
 router.post("/get_product_by_category", get_Product_By_Category);
 

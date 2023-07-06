@@ -291,7 +291,39 @@ const search_Product = async (req, res) => {
   }
 };
 
+// TODO: ======================================================== Add To Cart ========================================================
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const addToCart = async (req, res) => {
+  const { product_id, product_quantity } = req.body;
+  try {
+    //  get the product from the database
+    const product = await pool.query("SELECT * FROM products WHERE id = $1", [
+      product_id,
+    ]);
+
+    if (product.rows.length === 0) {
+      return res.json({
+        status: 404,
+        message: "Product not found",
+      });
+    } else if (product.rows.length > 0) {
+      res.json({
+        status: 200,
+        message: "Product retrieved successfully",
+        product: product.rows[0],
+      });
+    }
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
+  addToCart,
   get_Product_Details,
   post_Product,
   search_Product,
