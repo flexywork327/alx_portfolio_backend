@@ -314,6 +314,7 @@ const addToCart = async (req, res) => {
         product_category,
         product_description,
         product_price,
+        product_quantity,
         product_image,
         product_section,
         product_activated,
@@ -321,7 +322,7 @@ const addToCart = async (req, res) => {
       } = product.rows[0];
 
       const add_Product = await pool.query(
-        "INSERT INTO cart (product_name, product_category, product_description, product_price, product_quantity,product_image, product_section,seller_id,product_activated,cart_quantity,shopper_id,total_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+        "INSERT INTO cart (product_name, product_category, product_description, product_price, product_quantity,product_image, product_section,seller_id,product_activated,cart_quantity,shopper_id,total_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *",
         [
           product_name,
           product_category,
@@ -341,7 +342,7 @@ const addToCart = async (req, res) => {
       res.json({
         status: 200,
         message: "Product added to cart successfully",
-        product: product.rows[0],
+        product: add_Product.rows[0],
       });
     }
   } catch (error) {
@@ -351,15 +352,83 @@ const addToCart = async (req, res) => {
   }
 };
 
+// TODO: ======================================================== Get User Cart Items ========================================================
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const getUserCartItems = async (req, res) => {
+  try {
+    //  get the product from the database
+    const product = await pool.query(
+      "SELECT * FROM cart WHERE shopper_id = $1",
+      [req.user.id]
+    );
+
+    if (product.rows.length === 0) {
+      return res.json({
+        status: 404,
+        message: "Product not found",
+      });
+    } else if (product.rows.length > 0) {
+      // loop through all the products in the cart and add the total cost as cart_total
+      let cart_total = 0;
+      product.rows.forEach((item) => {
+        // convert the total_cost to a number
+        item.total_cost = Number(item.total_cost);
+
+        // add the total_cost to the cart_total
+        cart_total += item.total_cost;
+      });
+
+      res.json({
+        status: 200,
+        message: "Product retrieved successfully",
+        product: product.rows,
+        cart_total,
+        count: product.rows.length,
+      });
+    }
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
+// TODO: ======================================================== Remove From Cart ========================================================
+// desc Get Product Details
+// @route post /get_product_detail
+// @access public
+const removeFromCart = async (req, res) => {
+  const { cart_id } = req.body;
+  try {
+    //  get the product from the database
+    const product = await pool.query("DELETE FROM cart WHERE cart_id = $1", [
+      cart_id,
+    ]);
+
+    res.json({
+      status: 200,
+      message: "Product removed from cart successfully",
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
   addToCart,
-  get_Product_Details,
-  post_Product,
-  search_Product,
-  list_Product_Category,
-  get_all_Products,
   editProduct,
+  post_Product,
   activeProduct,
+  removeFromCart,
+  search_Product,
   inactiveProduct,
+  getUserCartItems,
+  get_all_Products,
+  get_Product_Details,
+  list_Product_Category,
   get_Product_By_Category,
 };
