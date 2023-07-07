@@ -54,12 +54,12 @@
         id SERIAL PRIMARY KEY,
         product_name VARCHAR(255) NOT NULL,
         product_category VARCHAR(255) NOT NULL,
-        product_description VARCHAR(255) NOT NULL,
+        product_description VARCHAR(65530) NOT NULL,
         product_price VARCHAR(255) NOT NULL,
         product_quantity VARCHAR(255) NOT NULL,
         product_image VARCHAR(255) NOT NULL,
-        product_section VARCHAR(255) REFERENCES product_sections(product_section_name),
-        seller_id INTEGER REFERENCES sellers(id),
+        product_section VARCHAR(255),
+        seller_id INTEGER NOT NULL,
         product_activated BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -71,12 +71,12 @@
         cart_id SERIAL PRIMARY KEY,
         product_name VARCHAR(255) NOT NULL,
         product_category VARCHAR(255) NOT NULL,
-        product_description VARCHAR(255) NOT NULL,
+        product_description VARCHAR(65530) NOT NULL,
         product_price VARCHAR(255) NOT NULL,
         product_quantity VARCHAR(255) NOT NULL,
         product_image VARCHAR(255) NOT NULL,
-        product_section VARCHAR(255) REFERENCES product_sections(product_section_name),
-        seller_id INTEGER REFERENCES sellers(id),
+        product_section VARCHAR(255),
+        seller_id INTEGER NOT NULL,
         product_activated BOOLEAN,
         cart_quantity VARCHAR(255),
         shopper_id VARCHAR(255),
@@ -101,6 +101,7 @@
         id SERIAL PRIMARY KEY,
         product_category_name VARCHAR(255) NOT NULL UNIQUE
     );
+    
 
 
 -- drop TABLES
@@ -118,3 +119,7 @@
 
 -- update items in table
     UPDATE users SET first_name = 'John' WHERE id = 1;    
+
+-- modify column
+    ALTER TABLE products MODIFY product_description VARCHAR(65530) NOT NULL;
+    
