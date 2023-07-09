@@ -7,7 +7,7 @@ const sendEmail = require("../Utils/Email");
 //TODO: ======================================================== Register User ========================================================
 
 // desc Register User
-// @route post /api/user/register
+// @route post /seller/register
 // @access public
 const registerSeller = async (req, res) => {
   const {
@@ -26,6 +26,8 @@ const registerSeller = async (req, res) => {
     const user = await pool.query("SELECT * FROM sellers WHERE email = $1", [
       email,
     ]);
+
+    // activation link
 
     // if user exists, resend activation link
     if (user.rows.length > 0) {
@@ -119,9 +121,9 @@ const registerSeller = async (req, res) => {
 
 //TODO: =================================================================== ACTIVATE A NEW USER ===================================================================
 
-//POST /activate/${email}&${token}
-//@desc  Verify shopper email
-//@ private
+//POST /admin/activate
+//@desc  Activate user Account
+//@ public
 const activateSeller = async (req, res) => {
   const { email, token } = req.body;
   // find user
@@ -158,7 +160,7 @@ const activateSeller = async (req, res) => {
 // TODO: ======================================================== Login User ========================================================
 
 // desc Login User
-// @route post /api/v1/login
+// @route post /admin/login
 // @access public
 const loginSeller = async (req, res) => {
   try {
@@ -181,7 +183,18 @@ const loginSeller = async (req, res) => {
       res.status(200).json({
         status: 200,
         message: "Successfully logged in",
-        user: user.rows[0],
+        user: {
+          id: user.rows[0].id,
+          first_name: user.rows[0].first_name,
+          last_name: user.rows[0].last_name,
+          email: user.rows[0].email,
+          company_name: user.rows[0].company_name,
+          country: user.rows[0].country,
+          contact: user.rows[0].contact,
+          business_category: user.rows[0].business_category,
+          activated: user.rows[0].activated,
+          created_at: user.rows[0].created_at,
+        },
         token: generateToken(user.rows[0].id),
       });
     } else {
@@ -202,11 +215,11 @@ const loginSeller = async (req, res) => {
 
 // desc Update User
 // @route post /api/v1/update
-// @access public
+// @access private
 const updateSeller = async (req, res) => {
   try {
-    const { id } = req.params;
     const {
+      id = req.user.id,
       first_name,
       last_name,
       email,
@@ -259,7 +272,7 @@ const updateSeller = async (req, res) => {
 // @access private
 const getUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
 
     const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
 
@@ -289,7 +302,7 @@ const getUser = async (req, res) => {
 // @access private
 const changePassword = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
 
     const { oldPassword, newPassword } = req.body;
 
@@ -339,7 +352,7 @@ const changePassword = async (req, res) => {
 
 // TODO: ========================================= Forgot Password =========================================
 // desc Change User Password
-// @route post /api/user/change-password/:id
+// @route post /api/user/forgot-password/:id
 // @access private
 const forgotPassword = async (req, res) => {
   // forgot password
@@ -463,8 +476,8 @@ const generateToken = (id) => {
 module.exports = {
   getUser,
   loginSeller,
-  resetPassword,
   updateSeller,
+  resetPassword,
   registerSeller,
   changePassword,
   activateSeller,
