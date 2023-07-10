@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require("jsonwebtoken");
 const pool = require("../Config/db");
+const cloudinary = require("../Utils/cloudinary");
 
 //TODO: ======================================================== Register User ========================================================
 
@@ -262,6 +263,9 @@ const deleteProduct = async (req, res) => {
         message: "Product not found",
       });
     }
+
+    // delete image from cloudinary
+    await cloudinary.uploader.destroy(product.rows[0].image_id);
 
     const deletedProduct = await pool.query(
       "DELETE FROM products WHERE id = $1",

@@ -144,7 +144,7 @@ const post_Product = async (req, res) => {
     });
 
     const product = await pool.query(
-      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_section,seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_section,seller_id,image_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
       [
         product_name,
         product_category,
@@ -154,6 +154,7 @@ const post_Product = async (req, res) => {
         product_quantity,
         product_section,
         req.user.id,
+        result.public_id,
       ]
     );
 

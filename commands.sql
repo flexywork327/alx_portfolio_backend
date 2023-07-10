@@ -63,6 +63,7 @@
         product_activated BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        image_id VARCHAR(255),
     );
 
 
@@ -123,3 +124,5 @@
 -- modify column
     ALTER TABLE products MODIFY product_description VARCHAR(65530) NOT NULL;
     
+-- insert new column 
+    ALTER TABLE products ADD image_id VARCHAR(255) DEFAULT 'no image';
