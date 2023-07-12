@@ -11,6 +11,7 @@ const {
   inactiveProduct,
   get_all_Products,
   getUserCartItems,
+  clearUserCartItems,
   get_Product_Details,
   list_Product_Category,
   get_Product_By_Category,
@@ -44,5 +45,6 @@ router.post("/get_product_detail", get_Product_Details);
 router.post("/add_to_cart", sellerPrivilege, addToCart);
 router.post("/get_product_by_category", get_Product_By_Category);
 router.post("/remove_from_cart", sellerPrivilege, removeFromCart);
+router.post("/clear_all_cart", sellerPrivilege, clearUserCartItems);
 
 module.exports = router;

@@ -411,6 +411,28 @@ const getUserCartItems = async (req, res) => {
   }
 };
 
+// TODO: ======================================================== Clear User Cart Items ========================================================
+// desc Clear Login User Products in Cart
+// @route get /products/clear_user_cart_item
+// @access private (need to login)
+const clearUserCartItems = async (req, res) => {
+  const { user_id } = req.body;
+  try {
+    const product = await pool.query("DELETE FROM cart WHERE shopper_id = $1", [
+      user_id,
+    ]);
+
+    res.json({
+      status: 200,
+      message: "Product(s) cleared successfully",
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
   addToCart,
   editProduct,
@@ -421,6 +443,7 @@ module.exports = {
   inactiveProduct,
   getUserCartItems,
   get_all_Products,
+  clearUserCartItems,
   get_Product_Details,
   list_Product_Category,
   get_Product_By_Category,
