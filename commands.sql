@@ -80,7 +80,7 @@
         seller_id INTEGER NOT NULL,
         product_activated BOOLEAN,
         cart_quantity VARCHAR(255),
-        shopper_id VARCHAR(255),
+        shopper_id INTEGER NOT NULL,
         total_cost VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

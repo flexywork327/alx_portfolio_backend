@@ -268,13 +268,13 @@ const updateSeller = async (req, res) => {
 
 //TODO: ======================================================== Get  User ========================================================
 // desc Get User
-// @route get /api/user/:id
+// @route get /api/user
 // @access private
 const getUser = async (req, res) => {
   try {
-    const { id } = req.body;
-
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = await pool.query("SELECT * FROM sellers WHERE id = $1", [
+      req.user.id,
+    ]);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -285,7 +285,18 @@ const getUser = async (req, res) => {
       res.json({
         status: 200,
         message: "Successfully fetched user",
-        user: user.rows[0],
+        user: {
+          id: user.rows[0].id,
+          first_name: user.rows[0].first_name,
+          last_name: user.rows[0].last_name,
+          email: user.rows[0].email,
+          company_name: user.rows[0].company_name,
+          country: user.rows[0].country,
+          contact: user.rows[0].contact,
+          business_category: user.rows[0].business_category,
+          activated: user.rows[0].activated,
+          created_at: user.rows[0].created_at,
+        },
       });
     }
   } catch (error) {
@@ -308,7 +319,7 @@ const changePassword = async (req, res) => {
 
     //  get the user from the database
     const user = await pool.query(
-      "SELECT id,first_name,last_name, email, role,created_at  FROM users WHERE id = $1",
+      "SELECT id,first_name,last_name, email, role,created_at  FROM sellers WHERE id = $1",
       [id]
     );
 
@@ -327,7 +338,7 @@ const changePassword = async (req, res) => {
 
       // update user
       const updatedUser = await pool.query(
-        "UPDATE users SET password = $1 WHERE id = $2 RETURNING *",
+        "UPDATE sellers SET password = $1 WHERE id = $2 RETURNING *",
         [hashedPassword, id]
       );
 

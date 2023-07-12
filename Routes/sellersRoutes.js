@@ -13,7 +13,7 @@ const {
 const { sellerPrivilege } = require("../Middlewares/sellerAuthMiddleware");
 
 // get Routes
-router.get("/me", sellerPrivilege, getUser);
+router.get("/get_user_details", sellerPrivilege, getUser);
 
 // post Routes
 router.post("/login", loginSeller);
