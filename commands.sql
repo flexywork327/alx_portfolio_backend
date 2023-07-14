@@ -63,6 +63,7 @@
         product_activated BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        image_id VARCHAR(255),
     );
 
 
@@ -79,7 +80,7 @@
         seller_id INTEGER NOT NULL,
         product_activated BOOLEAN,
         cart_quantity VARCHAR(255),
-        shopper_id VARCHAR(255),
+        shopper_id INTEGER NOT NULL,
         total_cost VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -123,3 +124,5 @@
 -- modify column
     ALTER TABLE products MODIFY product_description VARCHAR(65530) NOT NULL;
     
+-- insert new column 
+    ALTER TABLE products ADD image_id VARCHAR(255) DEFAULT 'no image';

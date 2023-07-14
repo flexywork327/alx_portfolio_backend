@@ -8,14 +8,14 @@ const {
   activateShopper,
   forgotPassword,
 } = require("../Controllers/shoppersControllers");
-const { protect } = require("../Middlewares/shopperAuthMiddleware");
+const { shopperPrivilege } = require("../Middlewares/shopperAuthMiddleware");
 
-router.get("/me/:id", protect, getShopper);
+router.get("/me/:id", shopperPrivilege, getShopper);
 
 router.post("/login", loginShopper);
 router.post("/register", registerShopper);
 router.post("/activate_user", activateShopper);
-router.post("/forgot_password", protect, forgotPassword);
-router.post("/change_password/:id", protect, changePassword);
+router.post("/forgot_password", shopperPrivilege, forgotPassword);
+router.post("/change_password/:id", shopperPrivilege, changePassword);
 
 module.exports = router;

@@ -144,7 +144,7 @@ const post_Product = async (req, res) => {
     });
 
     const product = await pool.query(
-      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_section,seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+      "INSERT INTO products (product_name, product_category, product_description, product_price, product_image, product_quantity, product_section,seller_id,image_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
       [
         product_name,
         product_category,
@@ -154,6 +154,7 @@ const post_Product = async (req, res) => {
         product_quantity,
         product_section,
         req.user.id,
+        result.public_id,
       ]
     );
 
@@ -410,6 +411,28 @@ const getUserCartItems = async (req, res) => {
   }
 };
 
+// TODO: ======================================================== Clear User Cart Items ========================================================
+// desc Clear Login User Products in Cart
+// @route get /products/clear_user_cart_item
+// @access private (need to login)
+const clearUserCartItems = async (req, res) => {
+  const { user_id } = req.body;
+  try {
+    const product = await pool.query("DELETE FROM cart WHERE shopper_id = $1", [
+      user_id,
+    ]);
+
+    res.json({
+      status: 200,
+      message: "Product(s) cleared successfully",
+    });
+  } catch (error) {
+    res.json({
+      message: `${error}`,
+    });
+  }
+};
+
 module.exports = {
   addToCart,
   editProduct,
@@ -420,6 +443,7 @@ module.exports = {
   inactiveProduct,
   getUserCartItems,
   get_all_Products,
+  clearUserCartItems,
   get_Product_Details,
   list_Product_Category,
   get_Product_By_Category,

@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const pool = require("../Config/db");
 JWT_SECRET = process.env.JWT_SECRET;
 
-const protect = async (req, res, next) => {
+const sellerPrivilege = async (req, res, next) => {
   let token;
 
   if (
@@ -41,4 +41,4 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+module.exports = { sellerPrivilege };
