@@ -94,3 +94,4 @@ The API documentation for this project can be found [here](https://documenter.ge
 - [Felix Asare](https://github.com/flexywork327)
 
 - [Foster Adu-Gyamfi](https://github.com/Foxynero)(adugyamfifoster@gmail.com)
+- [Adebimpe Esther Ayooluwa](https://github.com/legacycodine)(adepimpeee842@gmai.com)
