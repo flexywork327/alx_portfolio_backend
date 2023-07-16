@@ -1,9 +1,9 @@
 # Introduction to Portfolio Project for ALX
-##Justlink Online Shop
+## Justlink Online Shop
 
 This is a portfolio project for ALX to showcase the skills and experience earned in the ALX Software Engineering program for the foundational period.
 
-##Link to the deployed site
+## Link to the deployed site
 portfolio-backend-s2lp.onrender.com/
 
 
@@ -92,6 +92,5 @@ The API documentation for this project can be found [here](https://documenter.ge
 ## Author
 
 - [Felix Asare](https://github.com/flexywork327)
-
 - [Foster Adu-Gyamfi](https://github.com/Foxynero)(adugyamfifoster@gmail.com)
 - [Adebimpe Esther Ayooluwa](https://github.com/legacycodine)(adepimpeee842@gmai.com)
