@@ -22,6 +22,7 @@ const getIndustries = async (req, res) => {
     });
   }
 };
+
 // TODO: ========================================= Get Products Category List =========================================
 // desc Get Industries List
 // @route get /api/user/industries
@@ -50,6 +51,7 @@ const getProduct_category = async (req, res) => {
     });
   }
 };
+
 // TODO: ========================================= Post Industries =========================================
 // desc Get Industries List
 // @route get /api/user/industries
@@ -73,6 +75,7 @@ const postIndustries = async (req, res) => {
     });
   }
 };
+
 // TODO: ========================================= Post Product Categories =========================================
 // desc Get Industries List
 // @route get /api/user/industries

@@ -1,25 +1,27 @@
 # Introduction to Portfolio Project for ALX
+
+## 📸 Architecture
+
+|                               |                                |
+| ----------------------------- | ------------------------------ |
+| ![screenshot](./images/1.png) | ![screenshot](./images/2.jpeg) |
+
 ## Justlink Online Shop
 
 This is a portfolio project for ALX to showcase the skills and experience earned in the ALX Software Engineering program for the foundational period.
 
-## Link to the deployed site
-portfolio-backend-s2lp.onrender.com/
-
-
 ## Technologies
 
+- JWT
+- Cors
+- Multer
+- Bcrypt
 - Node JS
-- Python
 - JavaScript
 - Express JS
 - Nodemailer
-- JWT
 - Cloudinary
-- Multer
-- Bcrypt
 - PostgreSQL
-- Cors
 
 ## Setup
 
@@ -91,6 +93,8 @@ The API documentation for this project can be found [here](https://documenter.ge
 
 ## Author
 
-- [Felix Asare](https://github.com/flexywork327)
-- [Foster Adu-Gyamfi](https://github.com/Foxynero)(adugyamfifoster@gmail.com)
-- [Adebimpe Esther Ayooluwa](https://github.com/legacycodine)(adepimpeee842@gmai.com)
+- [Felix Asare](https://github.com/flexywork327) - (https://github.com/flexywork327)
+
+- [Foster Adu-Gyamfi](https://github.com/Foxynero) - (adugyamfifoster@gmail.com)
+
+- [Adebimpe Esther Ayooluwa](https://github.com/legacycodine) - (adepimpeee842@gmai.com)

@@ -1,6 +1,9 @@
 -- create database ;
     CREATE DATABASE portfolio;
 
+-- drop database
+    DROP DATABASE IF EXISTS portfolio;
+
 -- connect to database
     \c portfolio;
     \d -- show all tables in database
