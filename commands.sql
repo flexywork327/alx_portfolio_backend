@@ -63,10 +63,10 @@
         product_image VARCHAR(255) NOT NULL,
         product_section VARCHAR(255),
         seller_id INTEGER NOT NULL,
+        image_id VARCHAR(255),
         product_activated BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        image_id VARCHAR(255),
     );
 
 
