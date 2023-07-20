@@ -10,8 +10,8 @@ const {
   getAllShoppers,
   activateProduct,
   deactivateProduct,
-} = require("../Controllers/adminControllers");
-const { adminPrivilege } = require("../Middlewares/adminAuthMiddleware");
+} = require("../controllers/adminControllers");
+const { adminPrivilege } = require("../middlewares/adminAuthMiddleware");
 
 // get Routes
 router.get("/get_all_seller", adminPrivilege, getAllSellers);

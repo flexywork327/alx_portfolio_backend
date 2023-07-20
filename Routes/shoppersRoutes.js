@@ -7,8 +7,8 @@ const {
   registerShopper,
   activateShopper,
   forgotPassword,
-} = require("../Controllers/shoppersControllers");
-const { shopperPrivilege } = require("../Middlewares/shopperAuthMiddleware");
+} = require("../controllers/shoppersControllers");
+const { shopperPrivilege } = require("../middlewares/shopperAuthMiddleware");
 
 router.get("/me/:id", shopperPrivilege, getShopper);
 

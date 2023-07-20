@@ -9,8 +9,8 @@ const {
   changePassword,
   registerSeller,
   forgotPassword,
-} = require("../Controllers/sellersControllers");
-const { sellerPrivilege } = require("../Middlewares/sellerAuthMiddleware");
+} = require("../controllers/sellersControllers");
+const { sellerPrivilege } = require("../middlewares/sellerAuthMiddleware");
 
 // get Routes
 router.get("/get_user_details", sellerPrivilege, getUser);

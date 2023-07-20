@@ -7,8 +7,8 @@ const {
   postProduct_category,
   postProduct_sections,
   getProduct_sections,
-} = require("../Controllers/utilsControllers");
-const { adminPrivilege } = require("../Middlewares/adminAuthMiddleware");
+} = require("../controllers/utilsControllers");
+const { adminPrivilege } = require("../middlewares/adminAuthMiddleware");
 
 // Get routes
 router.get("/get_industries", getIndustries);

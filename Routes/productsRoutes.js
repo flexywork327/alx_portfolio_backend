@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../Utils/multer");
+const upload = require("../utils/multer");
 const {
   addToCart,
   editProduct,
@@ -15,8 +15,8 @@ const {
   get_Product_Details,
   list_Product_Category,
   get_Product_By_Category,
-} = require("../Controllers/productsControllers");
-const { sellerPrivilege } = require("../Middlewares/sellerAuthMiddleware");
+} = require("../controllers/productsControllers");
+const { sellerPrivilege } = require("../middlewares/sellerAuthMiddleware");
 
 // get Routes
 router.get("/active", activeProduct);

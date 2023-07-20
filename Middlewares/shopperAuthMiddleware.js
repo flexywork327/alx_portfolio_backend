@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const pool = require("../Config/db");
+const pool = require("../config/db");
 JWT_SECRET = process.env.JWT_SECRET;
 
 const shopperPrivilege = async (req, res, next) => {
