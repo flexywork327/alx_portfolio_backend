@@ -1,5 +1,5 @@
-const pool = require("../Config/db");
-const cloudinary = require("../Utils/cloudinary");
+const pool = require("../config/db");
+const cloudinary = require("../utils/cloudinary");
 
 //TODO: ======================================================== Get All Product ========================================================
 

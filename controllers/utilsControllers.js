@@ -1,4 +1,4 @@
-const pool = require("../Config/db");
+const pool = require("../config/db");
 
 // TODO: ========================================= Get Industries List =========================================
 // desc Get Industries List

@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 JWT_SECRET = process.env.JWT_SECRET;
-const pool = require("../Config/db");
-const sendEmail = require("../Utils/Email");
+const pool = require("../config/db");
+const sendEmail = require("../utils/Email");
 
 //TODO: ======================================================== Register User ========================================================
 

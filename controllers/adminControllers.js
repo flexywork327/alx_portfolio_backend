@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
 JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require("jsonwebtoken");
-const pool = require("../Config/db");
-const cloudinary = require("../Utils/cloudinary");
+const pool = require("../config/db");
+const cloudinary = require("../utils/cloudinary");
 
 //TODO: ======================================================== Register User ========================================================
 
